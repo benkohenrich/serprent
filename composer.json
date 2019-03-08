@@ -1,0 +1,32 @@
+{
+  "name": "cheddar-cms",
+  "license": "proprietary",
+  "repositories": [
+    {
+      "type": "git",
+      "url": "git@dev01.backbone.sk:appendix/appendix.git"
+    },
+    {
+      "type": "git",
+      "url": "https://github.com/backbonesk/php-activerecord.git"
+    }
+  ],
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "require": {
+    "backbone/appendix": "dev-master",
+    "php-activerecord/php-activerecord": "dev-dev"
+  },
+  "autoload": {
+    "psr-0": {
+      "Components": "app/",
+      "Controllers": "app/",
+      "Config": "app/",
+      "Exceptions": "app/",
+      "Helpers": "app/",
+      "Libraries": "app/",
+      "Models": "app/",
+      "Shells": "app/Private/"
+    }
+  }
+}

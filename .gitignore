@@ -1,0 +1,23 @@
+# OS generated files
+.DS_Store?
+*.DS_Store
+Thumbs.db
+.bundle/
+/vendor/
+
+# Project specific
+.sass-cache/
+
+app/Config/Assets.php
+
+/public/styles/*.css
+
+/tmp/*
+config/deploy/*.yml
+public/data
+public/.htaccess
+
+/.idea
+/config.rb
+
+*.old

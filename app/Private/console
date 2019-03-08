@@ -1,0 +1,15 @@
+#!/usr/bin/env php
+<?php
+(PHP_SAPI !== 'cli') AND exit('Konzolove akcie mozu bezat iba z prikazoveho riadku');
+
+require_once(__DIR__.'/../../vendor/autoload.php');
+
+define('APP_PATH', __DIR__.'/../../app/');
+define('PUBLIC_PATH', APP_PATH.'/../public/');
+
+$arguments = isset($_SERVER['argv']) ? $_SERVER['argv'] : [];
+
+array_shift($arguments);
+
+// Spustenie systemu a vytvorenie prostredia pre beh aplikacie
+exit(\Appendix\Core\System::initialize($arguments));
