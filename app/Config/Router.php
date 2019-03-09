@@ -62,6 +62,16 @@ $config = [
 	'patterns'				=> [
 		'cms' => [
 
+			// Authorization
+			[
+				'^/login/$',
+				'Admin\Auth', 'login'
+			],
+			[
+				'^/logout/$',
+				'Admin\Auth', 'logout'
+			],
+
 			// Dashboard
 			[
 				'GET', '^/dashboard/$',
@@ -70,7 +80,7 @@ $config = [
 		]
 	],
 
-	'is_multilingual' 		=> FALSE,
+	'is_multilingual' 		=> TRUE,
 
 	'valid_languages'		=> [
 		'sk' 	=> 'sk_SK',

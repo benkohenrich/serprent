@@ -64,6 +64,7 @@ $config[ DEVELOPMENT ] = [
 			'password'		=> '',
 			'database'		=> 'seprent_cms',
 			'port'			=> 3306,
+			'database'		=> 'serprent_cms',
 			'sock'			=> '',
 			'charset' 		=> 'utf8'
 		]
