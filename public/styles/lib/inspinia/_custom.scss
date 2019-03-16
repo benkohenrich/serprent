@@ -1,0 +1,109 @@
+.hide_column{
+  display : none;
+}
+
+.payments-status-filter-group {
+
+  text-align: center;
+  label{
+    padding: 3px 6px 6px 7px;
+    font-size: 11px !important;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+    display: inline-block;
+    margin-right: 4px;
+    input {
+      margin-right: 10px;
+    }
+  }
+}
+
+.is-hidden-filter-group {
+  label{
+    padding: 3px 6px 6px 7px;
+    font-size: 11px !important;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+    display: inline-block;
+    margin-right: 4px;
+    input {
+      margin-right: 10px;
+    }
+  }
+}
+
+.label-status-none {
+  background-color: #86cd7a;
+  color: #FFFFFF;
+}
+
+.label-status-completed {
+  background-color: #46a935;
+  color: #FFFFFF;
+}
+
+.label-status-in_progress {
+  background-color: #1d84c6;
+  color: #FFFFFF;
+}
+
+.label-status-pending {
+  background-color: #3faee6;
+  color: #FFFFFF;
+}
+
+.label-status-denied {
+  background-color: #9a554f;
+  color: #FFFFFF;
+}
+
+.label-status-rejected {
+  background-color: #cb7971;
+  color: #FFFFFF;
+}
+
+.label-status-cancelled {
+  background-color: #e3a299;
+  color: #FFFFFF;
+}
+
+
+
+.label-status-expired {
+  background-color: #cad5ce;
+  color: #FFFFFF;
+}
+
+.label-status-timeout {
+  background-color: #a3aea7;
+  color: #FFFFFF;
+}
+
+
+
+
+.daterangepicker_input {
+  display:none;
+}
+
+.dataTables_info {
+  display:inline-block;
+}
+
+.dataTables_paginate {
+  display:inline-block;
+  float: right;
+}
+
+.payer-id-filter {
+  position: relative;
+  float:right;
+}
+
+.custom-sidebar-tab {
+  
+}
+
+.no-clickable {
+  cursor: default;
+}

@@ -3,14 +3,10 @@
 namespace Controllers;
 
 use Appendix\Core\Controller;
-use Appendix\Core\I18n;
+
 use Appendix\Core\Router;
 use Appendix\Libraries\Auth;
 use Exceptions\SystemException;
-use Helpers\ModelHelper;
-use Helpers\Logger as MyLogger;
-use Models\Client;
-use Models\Role;
 use Models\User;
 
 class Admin extends Controller
@@ -29,7 +25,7 @@ class Admin extends Controller
 
 		$this->attach_logs();
 
-		if (!$this->auth->logged_in('cms.login'))
+		if (!$this->auth->logged_in('auth.login'))
 		{
 			$this->check_whitelist();
 		}

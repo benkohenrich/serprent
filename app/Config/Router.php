@@ -72,10 +72,10 @@ $config = [
 				'Admin\Auth', 'logout'
 			],
 
-			// Dashboard
+			// Users
 			[
-				'GET', '^/dashboard/$',
-				'Admin\Dashboard', 'overview'
+				'^/users/$',
+				'Admin\Users', 'overview'
 			],
 		]
 	],

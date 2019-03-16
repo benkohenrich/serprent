@@ -17,8 +17,6 @@ use Appendix\Models\History;
 
 class Logger extends \Appendix\Libraries\Logger
 {
-	private static $client_id = NULL;
-
 	public static function instance()
 	{
 		if (!(isset(self::$instance) AND self::$instance instanceof self))
@@ -29,21 +27,12 @@ class Logger extends \Appendix\Libraries\Logger
 		return self::$instance;
 	}
 
-	public static function client_id($client_id = NULL)
-	{
-		if (empty($client_id))
-			return self::$client_id;
-
-		return (self::$client_id = $client_id);
-	}
-
 	protected function log($level, $activity_id, $additional_data)
 	{
 		$log = new History();
 
 		$log->activity_id 	= $activity_id;
 		$log->level 		= $level;
-		$log->client_id 	= self::$client_id;
 		$log->ip_address 	= Input::$info['IP_ADDRESS'];
 		$log->url 			= sprintf(
 			'%s:%s',

@@ -5,27 +5,24 @@ namespace Controllers\Admin;
 use Appendix\Core\I18n;
 use Appendix\Core\Router;
 use Appendix\Core\System;
+use Appendix\Libraries\Input;
 use Controllers\Admin;
-use Models\Role;
 use Models\User;
-use Helpers\Logger as MyLogger;
 
 class Auth extends Admin
 {
 	public function login()
 	{
-		if ($this->input->session('token'))
+		if (Input::session('token'))
 		{
-			Router::redirect(
-				(array) System::config('admin.default_action_logged')
-			);
+			Router::redirect(System::config('admin.default_action_logged'));
 		}
 
 		if ($this->input->body("email") && $this->input->body("password"))
 		{
 			$status 			= $this->auth->login($this->input->body("email"), $this->input->body("password"), [], 1);
 
-			if (($status === TRUE) && $this->auth->logged_in('cms.login'))
+			if (($status === TRUE) && $this->auth->logged_in('auth.login'))
 			{
 				$this->user 	= User::get_first($this->auth->user_id());
 
@@ -52,8 +49,6 @@ class Auth extends Admin
 	public function logout()
 	{
 		$this->event->notify('auth.logout');
-
-		$this->input->destroy_session('active_client');
 
 		$this->auth->logout();
 
