@@ -7,6 +7,9 @@
 
   <title>{% block title %}{% endblock %} - {{ config('app.site_name') }}</title>
 
+  {#Toastr#}
+  <link href="{{ file(['styles', 'plugins', 'toastr', 'toastr.css']) }}" rel="stylesheet">
+
   {#Inspinia, Bootstrap, Font-Awesome, Custom#}
   <link href="{{ file(['styles', 'style.css']) }}" rel="stylesheet">
 
@@ -40,12 +43,55 @@
 {#Inspinia#}
 <script src="{{ file(['scripts', 'inspinia.js']) }}"></script>
 
+{#Toastr#}
+<script src="{{ file(['scripts', 'plugins', 'toastr', 'toastr.min.js' ]) }}"></script>
+
 <script src="{{ file(['scripts', 'scripts.js' ]) }}"></script>
 
 
 {% block javascript %}
 
 {% endblock %}
+
+<script>
+  $(document).ready(function () {
+
+    toastr.options = {
+      closeButton: false,
+      showDuration: 300,
+      hideDuration: 1000,
+      closeMethod: false,
+      closeDuration: false,
+      closeEasing: false,
+      closeOnHover: true,
+      debug: false,
+      progressBar: false,
+      preventDuplicates: true,
+      positionClass: 'toast-top-right',
+      onclick: null,
+      showEasing: "swing",
+      hideEasing: "linear",
+      showMethod: "fadeIn",
+      hideMethod: "fadeOut",
+      timeout: 5000,
+      iconClasses: {
+        error: 'toast-custom toast-custom-error',
+        info: 'toast-custom toast-custom-info',
+        success: 'toast-custom toast-custom-success',
+        warning: 'toast-custom toast-custom-warning'
+      },
+    };
+
+    {% if flash is not empty %}
+      {% if not flash[1] %}
+        toastr.info("{{ flash }}");
+      {% else %}
+        toastr.{{ flash[1] }}("{{ flash[0] }}");
+      {% endif %}
+    {% endif %}
+  });
+</script>
+
 
 </body>
 

@@ -31,7 +31,12 @@ class Auth extends Admin
 				$this->event->notify('auth.login.success');
 
 				Router::redirect(
-					(array) System::config('admin.default_action_logged')
+					(array) System::config('admin.default_action_logged'),
+					[
+						'flash' 	=> [
+							I18n::load('auth.login.flash.login_success'), 'success'
+						]
+					]
 				);
 			}
 			else
@@ -39,7 +44,9 @@ class Auth extends Admin
 				$this->event->notify('auth.login.fail');
 
 				$this->view->register([
-					'status' 					=> I18n::load("auth.login.wrong-combination")
+					'flash' 	=> [
+						I18n::load("auth.login.errors.wrong_combination"), 'error'
+					]
 				]);
 			}
 		}
@@ -52,6 +59,6 @@ class Auth extends Admin
 
 		$this->auth->logout();
 
-		Router::redirect(['auth', 'login']);
+		Router::redirect(['login']);
 	}
 }
