@@ -5,46 +5,66 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>{% block title %}{% endblock %} - {{ config('app.site_name') }}</title>
+  <title>{{ page_title ~ ' - ' ~  '[' ~ config('app.site_name') ~ ']' }}</title>
 
   {#Toastr#}
   <link href="{{ file(['styles', 'plugins', 'toastr', 'toastr.css']) }}" rel="stylesheet">
 
+  {#Animate#}
+  <link href="{{ file(['styles', 'plugins', 'animate', 'animate.css']) }}" rel="stylesheet">
+
   {#Inspinia, Bootstrap, Font-Awesome, Custom#}
   <link href="{{ file(['styles', 'style.css']) }}" rel="stylesheet">
-
 
   {% block css %}
 
   {% endblock %}
 </head>
 
-<body class="top-navigation">
-<div id="wrapper">
-  <div id="page-wrapper" class="">
+<body>
+  <div id="wrapper">
 
-    {#Content#}
-    <div class="">
-      {% block content %}
-      {% endblock %}
+    {% include '_partials/navigation/vertical.html' %}
+
+    <div id="page-wrapper" class="gray-bg">
+
+      {% include '_partials/navigation/horizontal.html' %}
+
+      {% include '_partials/breadcrumbs.html' %}
+
+      {#Content#}
+      <div>
+        {% block content %}
+        {% endblock %}
+      </div>
     </div>
   </div>
-
-</div>
 
 {#JavaScript#}
 
 {#jQuery#}
-<script src="{{ file(['scripts', 'jquery-3.1.1.min.js']) }}"></script>
+<script src="{{ file(['scripts', 'plugins', 'jquery', 'jquery-3.1.1.min.js']) }}"></script>
 
 {#jQueryUI#}
 <script src="{{ file(['scripts', 'plugins', 'jquery-ui', 'jquery-ui.min.js']) }}"></script>
 
+{#Bootstrap#}
+<script src="{{ file(['scripts', 'plugins', 'bootstrap', 'bootstrap.min.js']) }}"></script>
+
 {#Inspinia#}
-<script src="{{ file(['scripts', 'inspinia.js']) }}"></script>
+<script src="{{ file(['scripts', 'plugins', 'inspinia', 'inspinia.js']) }}"></script>
 
 {#Toastr#}
 <script src="{{ file(['scripts', 'plugins', 'toastr', 'toastr.min.js' ]) }}"></script>
+
+{#MetisMenu#}
+<script src="{{ file(['scripts', 'plugins', 'metis-menu', 'jquery.metisMenu.js' ]) }}"></script>
+
+{#SlimScroll#}
+<script src="{{ file(['scripts', 'plugins', 'slimscroll', 'jquery.slimscroll.min.js']) }}"></script>
+
+{#Pace#}
+<script src="{{ file(['scripts', 'plugins', 'pace', 'pace.min.js']) }}"></script>
 
 <script src="{{ file(['scripts', 'scripts.js' ]) }}"></script>
 

@@ -77,6 +77,9 @@ $config = [
 				'^/users/$',
 				'Admin\Users', 'overview'
 			],
+
+			// Default route
+			[ '^/$', 'Admin\Users', 'overview' ]
 		]
 	],
 

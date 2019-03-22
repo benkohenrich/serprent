@@ -2,9 +2,14 @@
 
 
 return [
-	'navigation' 	=> [
-		'dashboard' 				=> "Dashboard",
-		'users' 					=> "Používatelia",
+	'navigation' 		=> [
+		'profile' 			=> [
+			'my_profile' 		=> 'Môj profil',
+			'quick_access' 		=> 'Rýchly prístup',
+		],
+		'partials' 		=> [
+			'users' 		=> "Používatelia",
+		]
 	],
 
 	'controls' 		=> [

@@ -13,7 +13,7 @@
 }
 
 .navbar-default .nav > li > a:hover, .navbar-default .nav > li > a:focus {
-  background-color: darken($nav-bg, 3%);
+  background-color: #242424;
   color: white;
 }
 
@@ -153,7 +153,6 @@
 .nav-header {
   padding: 33px 25px;
   background-color: $nav-bg;
-  background-image: $nav-profile-pattern;
 
 }
 
@@ -179,11 +178,16 @@ ul.nav-second-level {
 }
 
 .nav-header a {
-  color: #DFE4ED;
+  color: #FFFFFF;
 }
 
 .nav-header .text-muted {
-  color: #8095a8;
+  color: #000000;
+}
+
+.nav-header .profile-name {
+  font-weight: bolder;
+  font-size: 1.1em;
 }
 
 .minimalize-styl-2 {
@@ -330,7 +334,9 @@ body.mini-navbar .navbar-default .nav > li > .nav-second-level li a {
   font-weight: 600;
   color: white;
   display: none;
-  padding: 18px 0;
+  background-color: white !important;
+  padding: 8px;
+  border: 2px solid #0f8f60;
 }
 
 .pace-done .navbar-static-side, .pace-done .nav-header, .pace-done li.active, .pace-done #page-wrapper, .pace-done .footer {

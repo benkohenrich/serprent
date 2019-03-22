@@ -14,5 +14,11 @@ return [
 		'flash' 			=> [
 			'login_success' 	=> 'Úspešné prihlásenie'
 		]
+	],
+
+	'logout' 			=> [
+		'navigation' 		=> [
+			'logout_button' 	=> 'Odhlásiť sa'
+		]
 	]
 ];

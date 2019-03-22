@@ -1,0 +1,29 @@
+<nav class="navbar-default navbar-static-side" role="navigation">
+  <div class="sidebar-collapse">
+    <ul class="nav metismenu" id="side-menu">
+
+      <li class="nav-header">
+        <div class="dropdown profile-element">
+          <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+            <span class="clear" style="text-align: center;">
+              <span class="block m-t-xs profile-name">{{ self.full_name }}</span>
+              <span class="text-muted text-xs block">{{ i18n('app.navigation.profile.quick_access') }}<b class="caret"></b></span>
+            </span>
+          </a>
+          <ul class="dropdown-menu animated fadeInRight m-t-xs">
+            <li><a href="{{ uri([ 'users', 'me' ]) }}">{{ i18n('app.navigation.profile.my_profile') }}</a></li>
+            <li class="divider"></li>
+            <li><a href="{{ uri([ 'logout' ]) }}">{{ i18n('auth.logout.navigation.logout_button') }}</a></li>
+          </ul>
+        </div>
+        <div class="logo-element">
+          <img src="{{ file(['images', 'logo.svg']) }}" style="max-width: 50px;">
+        </div>
+      </li>
+
+      {% include '_partials/navigation/_sections/users.html' %}
+
+    </ul>
+
+  </div>
+</nav>

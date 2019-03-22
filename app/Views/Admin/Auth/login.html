@@ -16,7 +16,7 @@
     <div class="middle-box text-center loginscreen animated fadeInDown">
       <div>
         <div>
-          <img src="{{ file(['images', 'logo.svg']) }}" style="max-width: 300px;">
+          <img src="{{ file(['images', 'logo.svg']) }}" style="max-width: 250px;">
         </div>
         <form class="m-t" role="form" method="post" action="{{ uri([ 'login' ]) }}">
           <div class="form-group">
@@ -30,8 +30,8 @@
       </div>
     </div>
 
-    <script src="{{ file(['scripts', 'jquery-3.1.1.min.js']) }}"></script>
-    <script src="{{ file(['scripts', 'bootstrap.min.js']) }}"></script>
+    <script src="{{ file(['scripts', 'plugins', 'jquery', 'jquery-3.1.1.min.js']) }}"></script>
+    <script src="{{ file(['scripts', 'plugins', 'bootstrap', 'bootstrap.min.js']) }}"></script>
   </body>
 </html>
 

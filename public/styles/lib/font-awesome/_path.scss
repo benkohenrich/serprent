@@ -1,7 +1,7 @@
 @import 'variables';
 
 @font-face {
-  font-family: 'Font Awesome 5 Free';
+  font-family: 'FontAwesome';
   font-style: normal;
   font-weight: 400;
   font-display: $fa-font-display;
@@ -11,9 +11,4 @@
   url('#{$fa-font-path}/fa-regular-400.woff') format('woff'),
   url('#{$fa-font-path}/fa-regular-400.ttf') format('truetype'),
   url('#{$fa-font-path}/fa-regular-400.svg#fontawesome') format('svg');
-}
-
-.far {
-  font-family: 'Font Awesome 5 Free';
-  font-weight: 400;
 }

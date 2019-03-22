@@ -37,7 +37,8 @@ class Users extends Admin
 						'title' 			=> I18n::load('users.overview.breadcrumbs.title'),
 						'url' 				=> Router::uri([ 'users' ])
 					],
-				]
+				],
+				'page_title' => I18n::load('users.overview.breadcrumbs.header')
 			]);
 		}
 	}

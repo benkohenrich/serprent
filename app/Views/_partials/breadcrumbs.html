@@ -1,0 +1,13 @@
+<div class="row wrapper border-bottom white-bg page-heading">
+  <div class="col-lg-10">
+    <h2>{{ page_title }}</h2>
+    <ol class="breadcrumb">
+      {% for breadcrumb in breadcrumbs %}
+        <li {% if loop.index == loop.last %} class="active" {% endif %}>
+          <a href="{{ breadcrumb.url }}">{{ breadcrumb.title }}</a>
+        </li>
+      {% endfor %}
+    </ol>
+  </div>
+  <div class="col-lg-2"></div>
+</div>
