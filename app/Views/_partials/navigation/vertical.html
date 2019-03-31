@@ -5,15 +5,23 @@
       <li class="nav-header">
         <div class="dropdown profile-element">
           <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-            <span class="clear" style="text-align: center;">
+            <span class="clear">
               <span class="block m-t-xs profile-name">{{ self.full_name }}</span>
               <span class="text-muted text-xs block">{{ i18n('app.navigation.profile.quick_access') }}<b class="caret"></b></span>
             </span>
           </a>
           <ul class="dropdown-menu animated fadeInRight m-t-xs">
-            <li><a href="{{ uri([ 'users', 'me' ]) }}">{{ i18n('app.navigation.profile.my_profile') }}</a></li>
+            <li>
+              <a href="{{ uri([ 'users', 'me' ]) }}">
+                <i class="fa fa-user quick-access-icon"></i>{{ i18n('app.navigation.profile.my_profile') }}
+              </a>
+            </li>
             <li class="divider"></li>
-            <li><a href="{{ uri([ 'logout' ]) }}">{{ i18n('auth.logout.navigation.logout_button') }}</a></li>
+            <li>
+              <a href="{{ uri([ 'logout' ]) }}">
+                <i class="fa fa-door-open quick-access-icon"></i>{{ i18n('auth.logout.navigation.logout_button') }}
+              </a>
+            </li>
           </ul>
         </div>
         <div class="logo-element">
@@ -21,7 +29,11 @@
         </div>
       </li>
 
+      {% include '_partials/navigation/_sections/clients.html' %}
+
       {% include '_partials/navigation/_sections/users.html' %}
+
+      {% include '_partials/navigation/_sections/cards.html' %}
 
     </ul>
 

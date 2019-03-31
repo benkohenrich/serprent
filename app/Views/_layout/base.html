@@ -1,118 +1,163 @@
 <!DOCTYPE html>
 <html>
 
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>{{ page_title ~ ' - ' ~  '[' ~ config('app.site_name') ~ ']' }}</title>
+    <title>{{ page_title ~ ' - ' ~  '[' ~ config('app.site_name') ~ ']' }}</title>
 
-  {#Toastr#}
-  <link href="{{ file(['styles', 'plugins', 'toastr', 'toastr.css']) }}" rel="stylesheet">
+    {#Toastr#}
+    <link href="{{ file(['styles', 'plugins', 'toastr', 'toastr.css']) }}" rel="stylesheet">
 
-  {#Animate#}
-  <link href="{{ file(['styles', 'plugins', 'animate', 'animate.css']) }}" rel="stylesheet">
+    {#Animate#}
+    <link href="{{ file(['styles', 'plugins', 'animate', 'animate.css']) }}" rel="stylesheet">
 
-  {#Inspinia, Bootstrap, Font-Awesome, Custom#}
-  <link href="{{ file(['styles', 'style.css']) }}" rel="stylesheet">
+    {#Parsley#}
+    <link href="{{ file(['styles', 'plugins', 'parsley', 'parsley.css']) }}" rel="stylesheet">
 
-  {% block css %}
+    {#Datatables#}
+    <link href="{{ file(['styles', 'plugins', 'data-tables', 'datatables.min.css']) }}" rel="stylesheet">
 
-  {% endblock %}
-</head>
+    {#Inspinia, Bootstrap, Font-Awesome, Custom#}
+    <link href="{{ file(['styles', 'style.css']) }}" rel="stylesheet">
 
-<body>
-  <div id="wrapper">
+    {% block css %}
 
-    {% include '_partials/navigation/vertical.html' %}
+    {% endblock %}
+  </head>
 
-    <div id="page-wrapper" class="gray-bg">
+  <body>
+    <div id="wrapper">
 
-      {% include '_partials/navigation/horizontal.html' %}
+      {%- import '_macros/forms.html' as forms_macro -%}
 
-      {% include '_partials/breadcrumbs.html' %}
+      {% include '_partials/navigation/vertical.html' %}
 
-      {#Content#}
-      <div>
-        {% block content %}
-        {% endblock %}
+      <div id="page-wrapper" class="gray-bg">
+
+        {% include '_partials/navigation/horizontal.html' %}
+
+        {% include '_partials/breadcrumbs.html' %}
+
+        {#Content#}
+        <div class="wrapper wrapper-content animated fadeInRight">
+          {% block content %}
+          {% endblock %}
+        </div>
       </div>
     </div>
-  </div>
 
-{#JavaScript#}
+    {#JavaScript#}
 
-{#jQuery#}
-<script src="{{ file(['scripts', 'plugins', 'jquery', 'jquery-3.1.1.min.js']) }}"></script>
+    {#jQuery#}
+    <script src="{{ file(['scripts', 'plugins', 'jquery', 'jquery-3.1.1.min.js']) }}"></script>
 
-{#jQueryUI#}
-<script src="{{ file(['scripts', 'plugins', 'jquery-ui', 'jquery-ui.min.js']) }}"></script>
+    {#jQueryUI#}
+    <script src="{{ file(['scripts', 'plugins', 'jquery-ui', 'jquery-ui.min.js']) }}"></script>
 
-{#Bootstrap#}
-<script src="{{ file(['scripts', 'plugins', 'bootstrap', 'bootstrap.min.js']) }}"></script>
+    {#Bootstrap#}
+    <script src="{{ file(['scripts', 'plugins', 'bootstrap', 'bootstrap.min.js']) }}"></script>
 
-{#Inspinia#}
-<script src="{{ file(['scripts', 'plugins', 'inspinia', 'inspinia.js']) }}"></script>
+    {#Inspinia#}
+    <script src="{{ file(['scripts', 'plugins', 'inspinia', 'inspinia.js']) }}"></script>
 
-{#Toastr#}
-<script src="{{ file(['scripts', 'plugins', 'toastr', 'toastr.min.js' ]) }}"></script>
+    {#Toastr#}
+    <script src="{{ file(['scripts', 'plugins', 'toastr', 'toastr.min.js' ]) }}"></script>
 
-{#MetisMenu#}
-<script src="{{ file(['scripts', 'plugins', 'metis-menu', 'jquery.metisMenu.js' ]) }}"></script>
+    {#MetisMenu#}
+    <script src="{{ file(['scripts', 'plugins', 'metis-menu', 'jquery.metisMenu.js' ]) }}"></script>
 
-{#SlimScroll#}
-<script src="{{ file(['scripts', 'plugins', 'slimscroll', 'jquery.slimscroll.min.js']) }}"></script>
+    {#SlimScroll#}
+    <script src="{{ file(['scripts', 'plugins', 'slimscroll', 'jquery.slimscroll.min.js']) }}"></script>
 
-{#Pace#}
-<script src="{{ file(['scripts', 'plugins', 'pace', 'pace.min.js']) }}"></script>
+    {#Pace#}
+    <script src="{{ file(['scripts', 'plugins', 'pace', 'pace.min.js']) }}"></script>
 
-<script src="{{ file(['scripts', 'scripts.js' ]) }}"></script>
+    {#Datatables#}
+    <script src="{{ file(['scripts', 'plugins', 'data-tables', 'datatables.min.js']) }}"></script>
 
+    {#Parsley#}
+    <script src="{{ file(['scripts', 'plugins', 'parsley', 'parsley.min.js']) }}"></script>
+    <script src="{{ file(['scripts', 'plugins', 'parsley', 'i18n', 'sk.js' ]) }}"></script>
+    <script src="{{ file(['scripts', 'plugins', 'parsley', 'i18n', 'hu.js' ]) }}"></script>
+    <script src="{{ file(['scripts', 'plugins', 'parsley', 'i18n', 'en.js' ]) }}"></script>
 
-{% block javascript %}
-
-{% endblock %}
-
-<script>
-  $(document).ready(function () {
-
-    toastr.options = {
-      closeButton: false,
-      showDuration: 300,
-      hideDuration: 1000,
-      closeMethod: false,
-      closeDuration: false,
-      closeEasing: false,
-      closeOnHover: true,
-      debug: false,
-      progressBar: false,
-      preventDuplicates: true,
-      positionClass: 'toast-top-right',
-      onclick: null,
-      showEasing: "swing",
-      hideEasing: "linear",
-      showMethod: "fadeIn",
-      hideMethod: "fadeOut",
-      timeout: 5000,
-      iconClasses: {
-        error: 'toast-custom toast-custom-error',
-        info: 'toast-custom toast-custom-info',
-        success: 'toast-custom toast-custom-success',
-        warning: 'toast-custom toast-custom-warning'
-      },
-    };
-
-    {% if flash is not empty %}
-      {% if not flash[1] %}
-        toastr.info("{{ flash }}");
-      {% else %}
-        toastr.{{ flash[1] }}("{{ flash[0] }}");
-      {% endif %}
-    {% endif %}
-  });
-</script>
+    {#Custom JS#}
+    <script src="{{ file(['scripts', 'scripts.js' ]) }}"></script>
 
 
-</body>
+    {% block javascript %}{% endblock %}
 
+    <script>
+      $(document).ready(function () {
+
+        // TOASTR FLASH
+        {% if flash is not empty %}
+          {% if not flash[1] %}
+            toastr.info("{{ flash }}");
+          {% else %}
+            toastr.{{ flash[1] }}("{{ flash[0] }}");
+          {% endif %}
+        {% endif %}
+
+        // FORM HANDLING
+        {% if form_id is defined %}
+
+          {% if save_success %}
+            toastr.success('{{ save_success }}');
+          {% endif %}
+
+          window.Parsley.setLocale('{{ self.language_code }}');
+
+          var formSelector    = $('#{{ form_id }}');
+          var validator       = formSelector.parsley([
+
+          ]);
+          var submitClicked   = false;
+
+          validator.on('form:success', function () {
+            $.ajax({
+              method  : "POST",
+              url     : formSelector.attr('action'),
+              data    : {
+                'form_data' : JSON.stringify(formSelector.serialize())
+              },
+              success: function (data) {
+                var parsedData        = JSON.parse(data);
+                window.location.href  = parsedData.route;
+              },
+              error: function (response) {
+                var message       = response.responseText;
+                var parsedErrors  = JSON.parse(message);
+                var errorMsg      = '';
+
+                for (var i = 0; i < parsedErrors.length; i++) {
+                  errorMsg = errorMsg + parsedErrors[i].message;
+
+                  if (i + 1 !== parsedErrors.length) {
+                    errorMsg = errorMsg + '<br>';
+                  }
+                }
+
+                toastr.error(errorMsg);
+              }
+            });
+          });
+
+          validator.on('form:error', function () {
+            submitClicked     = false;
+          });
+
+          $('#form-submit-button').on('click', function () {
+            setTimeout(function () {
+              submitClicked   = true;
+              validator.validate();
+            });
+          });
+        {% endif %}
+      });
+    </script>
+
+  </body>
 </html>

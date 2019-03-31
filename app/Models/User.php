@@ -7,6 +7,7 @@ use ActiveRecord\DateTime;
 use Appendix\Core\Model;
 use Appendix\Core\System;
 use Appendix\Libraries\Input;
+use Appendix\Models\Language;
 use Appendix\Models\UserInfo;
 use Helpers\ModelHelper;
 
@@ -16,11 +17,14 @@ use Helpers\ModelHelper;
  *
  * Properties:
  * @property int id
+ * @property int role_id
+ * @property int language_id
  * @property string email
  * @property string username
  * @property string password
  * @property string name
  * @property string surname
+ * @property boolean is_active
  * @property boolean is_deleted
  * @property DateTime last_login_at
  * @property DateTime created_at
@@ -40,7 +44,6 @@ class User extends Model
 		'password',
 		'name',
 		'surname'
-
 	];
 
 	public static $validate_is_unique 	= [
@@ -128,5 +131,12 @@ class User extends Model
 		]);
 
 		return Role::get_first($user_info->role_id);
+	}
+
+	public function get_language_code()
+	{
+		$language = Language::get_first($this->language_id);
+
+		return $language->code;
 	}
 }

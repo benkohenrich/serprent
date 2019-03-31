@@ -1,0 +1,24 @@
+
+{
+	"sEmptyTable":     "Nem elérhető semmilyen információ",
+	"sInfo":           "Feljegyzés _START_ -től _END_ -ig a teljes _TOTAL_ -ból",
+	"sInfoEmpty":      "Feljegyzés 0-tól 0-ig a teljes 0-ból ",
+	"sInfoFiltered":   "",
+	"sInfoPostFix":    "",
+  	"sInfoThousands":  ",",
+	"sLengthMenu":     "Jeleníts meg _MENU_ feljegyzést",
+	"sLoadingRecords": "Töltés...",
+	"sProcessing":     "Feldolgozom...",
+	"sSearch":         "Keress:",
+	"sZeroRecords":    "Semmi megfelelő feljegyzést sem találtunk",
+	"oPaginate": {
+		"sFirst":    "Első",
+		"sLast":     "Utolsó",
+		"sNext":     "Következő",
+		"sPrevious": "Előző"
+	},
+	"oAria": {
+		"sSortAscending":  ": aktiválja az oszlopok növekvő sorrendbe rendezéséhez",
+		"sSortDescending": ": aktiválja az oszlopok csökkenő sorrendbe rendezéséhez"
+	}
+}

@@ -12,4 +12,10 @@
 $config = [
 	'site_name' 								=> 'Serprent',
 	'minimal_password_length' 					=> 8,
+
+	'system_roles' 								=> [
+		'superadmin' 								=> 1,
+		'administrator' 							=> 2,
+		'user' 										=> 3
+	],
 ];

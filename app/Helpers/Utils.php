@@ -2,50 +2,71 @@
 
 namespace Helpers;
 
-
-use ActiveRecord\DateTime;
-use Appendix\Core\I18n;
-use Appendix\Core\Router;
+use Appendix\Libraries\Errors;
 
 class Utils
 {
 	/**
-	 * @param DateTime $datetime
+	 * @param $model
+	 * @param $attributes
+	 * @return array
 	 */
-	public static function get_time_difference($datetime)
+	public static function parse_input($model, $attributes)
 	{
-		$now 				= new DateTime();
+		$parsed_attributes 		= [];
+		$is_new_record 			= $model->is_new_record();
 
-		I18n::instance()->set_language(Router::active_language());
-
-		$intervals 			= [
-			'P1D' 			=> 'deň',
-			'PT1H' 			=> 'hodina',
-			'PT1M' 			=> 'minúta',
-		];
-
-		foreach ($intervals as $interval => $text)
+		foreach ($model->attributes() as $key => $model_attribute)
 		{
-			$interval 				= new \DateInterval($interval);
-			$date_range 			= new \DatePeriod($datetime, $interval, $now);
+			$value 		= NULL;
 
-			$result 				= 0;
-
-			/** @var \DateTime $date */
-			foreach ($date_range as $date)
+			if (isset($attributes[$key]))
 			{
-				$result++;
+				$value 		= $attributes[$key];
+			}
+			else
+			{
+				if (!$is_new_record)
+				{
+					$value 		= $model->{$key};
+				}
 			}
 
-			if ($result > 0)
+			$parsed_attributes[$key] 		= $value;
+		}
+
+		return $parsed_attributes;
+	}
+
+	/**
+	 * @param Errors $errors
+	 * @return array
+	 */
+	public static function reformat_errors(Errors $errors)
+	{
+		if ($errors->is_empty())
+			return[];
+
+		$reformatted_errors 		= [];
+		$already_inserted_msg 		= [];
+
+		foreach ($errors->raw() as $field => $errors)
+		{
+			foreach ($errors as $error)
 			{
-				return sprintf('%d %s', $result, $text);
+				if (!in_array($error['message'], $already_inserted_msg))
+				{
+					$already_inserted_msg[] 	= $error['message'];
+
+					$reformatted_errors[] 		= [
+						'field' 	=> $field,
+						'reason' 	=> $error['code'],
+						'message' 	=> $error['message']
+					];
+				}
 			}
 		}
 
-
-
-
-
+		return $reformatted_errors;
 	}
 }

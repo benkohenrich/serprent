@@ -1,0 +1,129 @@
+{% macro input_text(name, label, value = '', required = true, global) %}
+  <div class="form-group">
+    {% if label %}
+      <label for="{{ name }}">
+        {{ i18n(label) }}{% if required == true %}*{% endif %}
+      </label>
+    {% endif %}
+
+    <input type="text" class="form-control"
+        id="{{ name }}"
+        name="{{ name }}"
+        value="{{ value is not empty ? value }}"
+        placeholder="{{ i18n(global.placeholder) }}"
+        {{ required ? 'required' }}
+        {{ global.disabled ? 'disabled' }}
+        {{ global.ready_only ? 'readonly' }}
+    >
+  </div>
+{% endmacro %}
+
+{% macro input_number(name, label, value = '', required = true, global) %}
+  <div class="form-group">
+    {% if label %}
+      <label for="{{ name }}">
+        {{ i18n(label) }}{% if required == true %}*{% endif %}
+      </label>
+    {% endif %}
+
+    <input type="number" class="form-control"
+        id="{{ name }}"
+        name="{{ name }}"
+        value="{{ value is not empty ? value }}"
+        placeholder="{{ i18n(global.placeholder) }}"
+        {{ required ? 'required' }}
+        {{ global.disabled ? 'disabled' }}
+        {{ global.ready_only ? 'readonly' }}
+    >
+  </div>
+{% endmacro %}
+
+{% macro select(name, label, options, default = '', required = true, global) %}
+  <div class="form-group">
+    {% if label %}
+      <label for="{{ name }}">
+        {{ i18n(label) }}{% if required == true %}*{% endif %}
+      </label>
+    {% endif %}
+
+    <select class="form-control"
+        id="{{ name }}"
+        name="{{ name }}"
+        title="{{ i18n(label) }}"
+        {{ required ? 'required' }}
+        {{ global.disabled ? 'disabled' }}
+        {{ global.ready_only ? 'readonly' }}
+    >
+      {% for option in options %}
+        <option value="{{ option.id }}" {{ default is not empty ? (option.id == default ? 'selected') }}>
+          {{ option.name }}
+        </option>
+      {% endfor %}
+    </select>
+  </div>
+{% endmacro %}
+
+{% macro input_email(name, label = '', value = '', required = true, global) %}
+  <div class="form-group">
+    {% if label %}
+      <label for="{{ name }}">
+        {{ i18n(label) }}{% if required == true %}*{% endif %}
+      </label>
+    {% endif %}
+
+    <input type="email" class="form-control"
+        id="{{ name }}"
+        name="{{ name }}"
+        value="{{ value is not empty ? value }}"
+        placeholder="{{ i18n(global.placeholder) }}"
+        {{ required ? 'required' }}
+        {{ global.disabled ? 'disabled' }}
+        {{ global.ready_only ? 'readonly' }}
+    >
+  </div>
+{% endmacro %}
+
+{% macro input_password(name, label, pattern, required = true, global) %}
+  <div class="form-group">
+    {% if label %}
+      <label for="{{ name }}">
+        {{ i18n(label) }}{% if required == true %}*{% endif %}
+      </label>
+    {% endif %}
+
+    <input type="password" class="form-control"
+        id="{{ name }}"
+        name="{{ name }}"
+        value="{{ value is not empty ? value }}"
+        placeholder="{{ i18n(global.placeholder) }}"
+        {{ required ? 'required' }}
+        {{ global.disabled ? 'disabled' }}
+        {{ global.ready_only ? 'readonly' }}
+        {% if pattern is not empty %}pattern="{{ pattern }}"{% endif %}
+    >
+  </div>
+{% endmacro %}
+
+{% macro input_hidden(name, value, multiple = false) %}
+  <input type="hidden" name="{{ name }}{{ multiple ? '[]' }}" id="{{ name }}" value="{{ value }}" required>
+{% endmacro %}
+
+{% macro checkbox(name, label, checked = false, required = false, global) %}
+  <div class="checkbox checkbox-inline">
+    <input name="{{ name }}" type="hidden" value="0" {{ disabled ? 'disabled' }} checked>
+    <input type="checkbox"
+        id="{{ name }}"
+        name="{{ name }}"
+        value="1"
+        {{ checked ? 'checked' }}
+        {{ required ? 'required' }}
+        {{ global.disabled ? 'disabled' }}
+    >
+
+    {% if label %}
+      <label for="{{ name }}">
+        {{ i18n(label) }}
+      </label>
+    {% endif %}
+  </div>
+{% endmacro %}

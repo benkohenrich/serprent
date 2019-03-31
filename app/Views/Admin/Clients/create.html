@@ -1,0 +1,100 @@
+{% extends '_layout/base.html' %}
+
+{% block content %}
+
+  <form id="{{ form_id }}" method="post" action="{{ uri([ 'clients', 'create' ]) }}" enctype="multipart/form-data">
+
+    <input type="hidden" name="save" value="1">
+
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="ibox float-e-margins">
+          <div class="ibox-title">
+            <h5>{{ i18n('clients.form.headers.client_info') }}</h5>
+          </div>
+          <div class="ibox-content">
+            <div class="row">
+              <div class="col-sm-6">
+                {{ forms_macro.input_text('name', 'clients.form.inputs.name', '', true, _context) }}
+              </div>
+
+              <div class="col-sm-6">
+                {{ forms_macro.select('type', 'clients.form.inputs.type', types, '', true, _context) }}
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-sm-6">
+                {{ forms_macro.input_text('city', 'clients.form.inputs.city', '', false, _context) }}
+              </div>
+
+              <div class="col-sm-6">
+                {{ forms_macro.input_text('street', 'clients.form.inputs.street', '', false, _context) }}
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-sm-6">
+                {{ forms_macro.input_text('zip', 'clients.form.inputs.zip', '', false, _context) }}
+              </div>
+
+              <div class="col-sm-6">
+                {{ forms_macro.input_text('longitude', 'clients.form.inputs.longitude', '', false, _context) }}
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-sm-6">
+                {{ forms_macro.input_text('latitude', 'clients.form.inputs.latitude', '', false, _context) }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-6">
+        <div class="ibox float-e-margins">
+          <div class="ibox-title">
+            <h5>{{ i18n('clients.form.headers.contact_info') }}</h5>
+          </div>
+          <div class="ibox-content">
+            <div class="row">
+              <div class="col-sm-6">
+                {{ forms_macro.input_text('contact_name', 'clients.form.inputs.contact_name', '', true, _context) }}
+              </div>
+
+              <div class="col-sm-6">
+                {{ forms_macro.input_email('contact_email', 'clients.form.inputs.contact_email', '', false, _context) }}
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-sm-6">
+                {{ forms_macro.input_text('contact_phone', 'clients.form.inputs.contact_phone', '', false, _context) }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {% if self.role_id == system_roles.superadmin %}
+        <div class="col-lg-6">
+          <div class="ibox float-e-margins">
+            <div class="ibox-title">
+              <h5>{{ i18n('clients.form.headers.superadmin_info') }}</h5>
+            </div>
+            <div class="ibox-content">
+              <div class="row">
+                <div class="col-sm-6">
+                  {{ forms_macro.checkbox('is_active', 'clients.form.inputs.is_active', true, false, _context) }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+
+  </form>
+
+{% endblock %}

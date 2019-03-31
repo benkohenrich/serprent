@@ -1,7 +1,7 @@
 <?php
 $config = [
 
-	'users' 	=> [
+	'users' 		=> [
 		'min_password_length' 	=> 8
 	],
 

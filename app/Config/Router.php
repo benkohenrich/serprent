@@ -74,8 +74,56 @@ $config = [
 
 			// Users
 			[
+				'^/users/create/$',
+				'Admin\Users', 'create'
+			],
+			[
+				'^/users/edit/(?<user_id>[0-9]+)/$',
+				'Admin\Users', 'edit'
+			],
+			[
+				'^/users/remove/(?<user_id>[0-9]+)/$',
+				'Admin\Users', 'remove'
+			],
+			[
 				'^/users/$',
 				'Admin\Users', 'overview'
+			],
+
+			// Clients
+			[
+				'^/clients/create/$',
+				'Admin\Clients', 'create'
+			],
+			[
+				'^/clients/edit/(?<client_id>[0-9]+)/$',
+				'Admin\Clients', 'edit'
+			],
+			[
+				'^/clients/remove/(?<client_id>[0-9]+)/$',
+				'Admin\Clients', 'remove'
+			],
+			[
+				'^/clients/$',
+				'Admin\Clients', 'overview'
+			],
+
+			// Cards
+			[
+				'^/cards/create/$',
+				'Admin\Cards', 'create'
+			],
+			[
+				'^/cards/edit/(?<card_id>[0-9]+)/$',
+				'Admin\Cards', 'edit'
+			],
+			[
+				'^/cards/remove/(?<card_id>[0-9]+)/$',
+				'Admin\Cards', 'remove'
+			],
+			[
+				'^/cards/$',
+				'Admin\Cards', 'overview'
 			],
 
 			// Default route

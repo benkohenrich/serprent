@@ -2,9 +2,11 @@
 
 namespace Controllers;
 
+use ActiveRecord\Config;
 use Appendix\Core\Controller;
 
 use Appendix\Core\Router;
+use Appendix\Core\System;
 use Appendix\Libraries\Auth;
 use Exceptions\SystemException;
 use Models\User;
@@ -38,11 +40,14 @@ class Admin extends Controller
 			$this->set_actual(Router::$uri_segments);
 
 			$this->view->register([
-				'self' 						=> [
+				'self' 					=> [
 					'full_name' 			=> $this->user->get_full_name(),
 					'id' 					=> $this->user->id,
 					'permissions' 			=> $this->auth->permissions(),
-				]
+					'role_id' 				=> $this->user->get_role()->id,
+					'language_code' 		=> $this->user->get_language_code()
+				],
+				'system_roles' 			=> System::config('app.system_roles')
 			]);
 		}
 

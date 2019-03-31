@@ -1,3 +1,17 @@
-<li style="border-top: 3px solid white;">
-  <a href="{{ uri([ 'users' ]) }}"><i class="fa fa-user"></i> <span class="nav-label">{{ i18n('app.navigation.partials.users') }}</span></a>
+<li {% if section == 'users' %}class="active" {% endif %}>
+  <a href="{{ uri([ 'users' ]) }}">
+    <i class="fa fa-user"></i> <span class="nav-label">{{ i18n('app.navigation.partials.users.main') }}</span><span class="fa arrow"></span>
+  </a>
+  <ul class="nav nav-second-level collapse">
+    <li {% if page == 'create_user' %}class="active"{% endif %}>
+      <a href="{{ uri([ 'users', 'create' ]) }}">
+        <i class="fa fa-plus"></i>{{ i18n('app.navigation.partials.users.create') }}
+      </a>
+    </li>
+    <li {% if page == 'overview_users' %}class="active"{% endif %}>
+      <a href="{{ uri([ 'users' ]) }}">
+        <i class="fa fa-bars"></i>{{ i18n('app.navigation.partials.users.overview') }}
+      </a>
+    </li>
+  </ul>
 </li>

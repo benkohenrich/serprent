@@ -9,12 +9,12 @@
 }
 
 .nav > li.active > a {
-  color: #ffffff;
+  color: $navy !important;
 }
 
 .navbar-default .nav > li > a:hover, .navbar-default .nav > li > a:focus {
-  background-color: #242424;
-  color: white;
+  background-color: $nav-list-bg;
+  color: $navy;
 }
 
 .nav .open > a, .nav .open > a:hover, .nav .open > a:focus {
@@ -161,12 +161,12 @@
 }
 
 ul.nav-second-level {
-  background: darken($nav-bg, 3%);
+  background: $nav-list-bg;
 }
 
 .nav > li.active {
   border-left: 4px solid darken($navy, 2%);
-  background: darken($nav-bg, 3%);
+  background: $nav-list-bg;
 }
 
 .nav.nav-second-level > li.active {
@@ -260,12 +260,17 @@ ul.nav-second-level {
   margin-bottom: 10px;
 }
 
+.mini-navbar .nav-second-level li:last-child {
+  margin-bottom: 0 !important;
+}
+
 body:not(.fixed-sidebar):not(.canvas-menu).mini-navbar .nav li:hover > .nav-second-level,
 .mini-navbar .nav li:focus > .nav-second-level {
   display: block;
   border-radius: 0 2px 2px 0;
   min-width: 140px;
   height: auto;
+  background-color: $nav-list-bg;
 }
 
 body.mini-navbar .navbar-default .nav > li > .nav-second-level li a {

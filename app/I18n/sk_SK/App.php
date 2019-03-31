@@ -8,12 +8,26 @@ return [
 			'quick_access' 		=> 'Rýchly prístup',
 		],
 		'partials' 		=> [
-			'users' 		=> "Používatelia",
+			'users' 		=> [
+				'main' 			=> 'Používatelia',
+				'create' 		=> 'Pridať nového',
+				'overview' 		=> 'Zoznam'
+			],
+			'clients' 		=> [
+				'main' 			=> 'Klienti',
+				'create' 		=> 'Pridať nového',
+				'overview' 		=> 'Zoznam'
+			],
+			'cards' 		=> [
+				'main' 			=> 'Karty',
+				'create' 		=> 'Pridať novú',
+				'overview' 		=> 'Zoznam'
+			],
 		]
 	],
 
 	'controls' 		=> [
-		'submit' 					=> 'Uložiť',
+		'submit' 					=> 'Uložiť formulár',
 		'edit' 						=> 'Editovať',
 		'view' 						=> 'Detail',
 		'delete' 					=> 'Vymazať',

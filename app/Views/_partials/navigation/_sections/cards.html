@@ -1,0 +1,17 @@
+<li {% if section == 'users' %}class="active" {% endif %}>
+  <a href="{{ uri([ 'cards' ]) }}">
+    <i class="fa fa-id-card"></i> <span class="nav-label">{{ i18n('app.navigation.partials.cards.main') }}</span><span class="fa arrow"></span>
+  </a>
+  <ul class="nav nav-second-level collapse">
+    <li {% if page == 'create_card' %}class="active"{% endif %}>
+      <a href="{{ uri([ 'cards', 'create' ]) }}">
+        <i class="fa fa-plus"></i>{{ i18n('app.navigation.partials.cards.create') }}
+      </a>
+    </li>
+    <li {% if page == 'overview_cards' %}class="active"{% endif %}>
+      <a href="{{ uri([ 'cards' ]) }}">
+        <i class="fa fa-bars"></i>{{ i18n('app.navigation.partials.cards.overview') }}
+      </a>
+    </li>
+  </ul>
+</li>

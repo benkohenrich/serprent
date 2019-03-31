@@ -1,0 +1,17 @@
+<li style="border-top: 3px solid white;" {% if section == 'clients' %}class="active" {% endif %}>
+  <a href="{{ uri([ 'clients' ]) }}">
+    <i class="fa fa-building"></i> <span class="nav-label">{{ i18n('app.navigation.partials.clients.main') }}</span><span class="fa arrow"></span>
+  </a>
+  <ul class="nav nav-second-level collapse">
+    <li {% if page == 'create_client' %}class="active"{% endif %}>
+      <a href="{{ uri([ 'clients', 'create' ]) }}">
+        <i class="fa fa-plus"></i>{{ i18n('app.navigation.partials.clients.create') }}
+      </a>
+    </li>
+    <li {% if page == 'overview_clients' %}class="active"{% endif %}>
+      <a href="{{ uri([ 'clients' ]) }}">
+        <i class="fa fa-bars"></i>{{ i18n('app.navigation.partials.clients.overview') }}
+      </a>
+    </li>
+  </ul>
+</li>

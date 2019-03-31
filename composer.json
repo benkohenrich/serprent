@@ -15,7 +15,8 @@
   "prefer-stable": true,
   "require": {
     "backbone/appendix": "dev-master",
-    "php-activerecord/php-activerecord": "dev-dev"
+    "php-activerecord/php-activerecord": "dev-dev",
+    "ext-json": "*"
   },
   "autoload": {
     "psr-0": {
