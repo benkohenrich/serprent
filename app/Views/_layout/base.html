@@ -19,6 +19,9 @@
     {#Datatables#}
     <link href="{{ file(['styles', 'plugins', 'data-tables', 'datatables.min.css']) }}" rel="stylesheet">
 
+    {#Bootstrap DateTimePicker#}
+    <link href="{{ file(['styles', 'plugins', 'bootstrap-datetimepicker', 'bootstrap-datetimepicker.css']) }}" rel="stylesheet">
+
     {#Inspinia, Bootstrap, Font-Awesome, Custom#}
     <link href="{{ file(['styles', 'style.css']) }}" rel="stylesheet">
 
@@ -77,6 +80,15 @@
     {#Datatables#}
     <script src="{{ file(['scripts', 'plugins', 'data-tables', 'datatables.min.js']) }}"></script>
 
+    {#MomentJs#}
+    <script src="{{ file(['scripts', 'plugins', 'moment', 'moment.js']) }}"></script>
+
+    {#Bootstrap DateTimePicker#}
+    <script src="{{ file(['scripts', 'plugins', 'bootstrap-datetimepicker', 'bootstrap-datetimepicker.js']) }}"></script>
+    <script src="{{ file(['scripts', 'plugins', 'bootstrap-datetimepicker', 'locales', 'bootstrap-datetimepicker.sk.js']) }}"></script>
+    <script src="{{ file(['scripts', 'plugins', 'bootstrap-datetimepicker', 'locales', 'bootstrap-datetimepicker.en.js']) }}"></script>
+    <script src="{{ file(['scripts', 'plugins', 'bootstrap-datetimepicker', 'locales', 'bootstrap-datetimepicker.hu.js']) }}"></script>
+
     {#Parsley#}
     <script src="{{ file(['scripts', 'plugins', 'parsley', 'parsley.min.js']) }}"></script>
     <script src="{{ file(['scripts', 'plugins', 'parsley', 'i18n', 'sk.js' ]) }}"></script>
@@ -100,6 +112,35 @@
             toastr.{{ flash[1] }}("{{ flash[0] }}");
           {% endif %}
         {% endif %}
+
+        // Bootstrap DateTimePicker options
+        $('#date-picker').datetimepicker({
+          format: 'dd.mm.yyyy',
+          startView: 'month',
+          minView: 'month',
+          maxView: 'decade',
+          autoclose: true,
+          language: '{{ self.language_code }}'
+        });
+
+        $('#datetime-picker').datetimepicker({
+          format: 'dd.mm.yyyy hh:ii',
+          startView: 'month',
+          minView: 'hour',
+          maxView: 'decade',
+          autoclose: true,
+          language: '{{ self.language_code }}'
+        });
+
+        $('#time-picker').datetimepicker({
+          format: 'hh:ii',
+          startView: 'day',
+          minView: 'hour',
+          maxView: 'day',
+          autoclose: true,
+          timeOnly: true,
+          language: '{{ self.language_code }}'
+        });
 
         // FORM HANDLING
         {% if form_id is defined %}
