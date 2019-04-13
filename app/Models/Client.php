@@ -62,13 +62,11 @@ class Client extends Model
 			$params['limit'] 			= $filter['limit'];
 		}
 
-		if (!empty($ordering))
+		$params['order'] 					= self::order($ordering);
+
+		if (empty($params['order']))
 		{
-			$params['order'] 		= sprintf("%s %s", $ordering['column'], $ordering['direction']);
-		}
-		else
-		{
-			$params['order'] 			= "created_at ASC";
+			$params['order'] 			= "id ASC";
 		}
 
 		$params['joins'] 				= array_unique($params['joins']);
@@ -80,6 +78,24 @@ class Client extends Model
 			$total_items,
 			self::get_all($params)
 		];
+	}
+
+	private static function order($ordering)
+	{
+		$order 		= '';
+
+		if (!empty($ordering['column']) AND !empty($ordering['direction']))
+		{
+			$column 		= $ordering['column'];
+			$direction 		= $ordering['direction'];
+
+			if ($column == 'address')
+				$column 	= 'street';
+
+			$order 		= sprintf("%s %s", $column, $direction);
+		}
+
+		return $order;
 	}
 
 	public function summary()

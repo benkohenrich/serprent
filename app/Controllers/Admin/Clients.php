@@ -2,17 +2,19 @@
 
 namespace Controllers\Admin;
 
-use ActiveRecord\Errors;
 use Appendix\Core\I18n;
 use Appendix\Core\Router;
 use Appendix\Libraries\Input;
 use Controllers\Admin;
 use Appendix\Exceptions\PageNotFound;
+use Helpers\DataTableHelper;
 use Helpers\Responder;
 use Helpers\Utils;
 use Libraries\Enums\Enums;
+use Libraries\Tables\ControlsBuilder;
+use Libraries\Tables\RowBuilder;
+use Libraries\Tables\TableBuilder;
 use Models\Client;
-use Models\User;
 
 class Clients extends Admin
 {
@@ -38,6 +40,37 @@ class Clients extends Admin
 		if (Input::is_ajax_request())
 		{
 			$this->view->set_file(FALSE);
+
+			$filter 							= DataTableHelper::create_filter_array();
+			$ordering 							= DataTableHelper::create_ordering_array();
+
+			list($total_items, $clients) 		= Client::find_all($filter, $ordering);
+
+			$table 		= new TableBuilder();
+
+			/** @var Client $client */
+			foreach ($clients as $client)
+			{
+				$row 		= new RowBuilder();
+				$controls 	= new ControlsBuilder();
+
+				$row->add($client->name);
+				$row->add($client->type);
+				$row->add(sprintf("%s %s %s", $client->street, $client->city, $client->zip));
+				$row->add($client->contact_name);
+				$row->add($client->is_active);
+
+				$controls->add('edit', Router::uri([ 'clients', 'edit', $client->id ]));
+				$controls->add('remove', Router::uri([ 'clients', 'remove', $client->id ]));
+
+				$row->add($controls->data());
+
+				$table->add($row->data());
+			}
+
+			echo Responder::initialize()->respond(200, DataTableHelper::create_response(
+				$table->data(), $total_items, Client::count([ 'conditions' => [ 'is_deleted' => 0 ] ]), $filter, $ordering
+			));
 		}
 		else
 		{
@@ -48,7 +81,8 @@ class Clients extends Admin
 						'url' 				=> Router::uri([ 'clients' ])
 					],
 				],
-				'page_title' => I18n::load('clients.overview.breadcrumbs.header')
+				'page_title' => I18n::load('clients.overview.breadcrumbs.header'),
+				'page' 						=> 'overview_clients',
 			]);
 		}
 	}
@@ -170,4 +204,6 @@ class Clients extends Admin
 		]);
 		die;
 	}
+
+	//TODO do delete after every other section is complete, because all users and cards of that company must be deleted with client
 }

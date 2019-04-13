@@ -26,6 +26,12 @@ return [
 		]
 	],
 
+	'plugins' 			=> [
+		'select2' 			=> [
+			'placeholder' 		=> 'Vyberte možnosť'
+		]
+	],
+
 	'controls' 		=> [
 		'submit' 					=> 'Uložiť formulár',
 		'edit' 						=> 'Editovať',

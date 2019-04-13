@@ -22,6 +22,9 @@
     {#Bootstrap DateTimePicker#}
     <link href="{{ file(['styles', 'plugins', 'bootstrap-datetimepicker', 'bootstrap-datetimepicker.css']) }}" rel="stylesheet">
 
+    {#Select2#}
+    <link href="{{ file(['styles', 'plugins', 'select2', 'select2.min.css']) }}" rel="stylesheet">
+
     {#Inspinia, Bootstrap, Font-Awesome, Custom#}
     <link href="{{ file(['styles', 'style.css']) }}" rel="stylesheet">
 
@@ -52,6 +55,11 @@
     </div>
 
     {#JavaScript#}
+
+    {#Custom JS#}
+    <script>
+      var language_code = "{{ self.language_code }}";
+    </script>
 
     {#jQuery#}
     <script src="{{ file(['scripts', 'plugins', 'jquery', 'jquery-3.1.1.min.js']) }}"></script>
@@ -94,6 +102,9 @@
     <script src="{{ file(['scripts', 'plugins', 'parsley', 'i18n', 'sk.js' ]) }}"></script>
     <script src="{{ file(['scripts', 'plugins', 'parsley', 'i18n', 'hu.js' ]) }}"></script>
     <script src="{{ file(['scripts', 'plugins', 'parsley', 'i18n', 'en.js' ]) }}"></script>
+
+    {#Select2#}
+    <script src="{{ file(['scripts', 'plugins', 'select2', 'select2.full.min.js']) }}"></script>
 
     {#Custom JS#}
     <script src="{{ file(['scripts', 'scripts.js' ]) }}"></script>
@@ -193,10 +204,22 @@
           $('#form-submit-button').on('click', function () {
             setTimeout(function () {
               submitClicked   = true;
-              validator.validate();
+              validator.validate({
+                errorClass: "myErrorClass",
+                errorPlacement: function (error, element) {
+                  var elem = $(element);
+                  error.insertAfter(element);
+                  console.log("asd");
+                },
+              });
             });
           });
         {% endif %}
+
+        $('.js-select').select2({
+          language: "{{ self.language_code }}",
+          placeholder: "{{ i18n('app.plugins.select2.placeholder') }}"
+        });
       });
     </script>
 

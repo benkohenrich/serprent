@@ -2,7 +2,20 @@
 
 
 return [
-	'overview' => [],
+	'overview' 			=> [
+		'breadcrumbs' 		=> [
+			'header' 			=> 'Klienti',
+			'title' 			=> 'Zoznam klientov',
+		],
+		'table' 			=> [
+			'name' 				=> 'Názov klienta',
+			'type' 				=> 'Typ',
+			'address' 			=> 'Adresa',
+			'contact_name' 		=> 'Kontaktná osoba',
+			'is_active' 		=> 'Status',
+			'controls' 			=> 'Možnosti',
+		]
+	],
 
 	'create' 			=> [
 		'breadcrumbs' 		=> [
@@ -12,7 +25,7 @@ return [
 		],
 	],
 
-	'edit' 			=> [
+	'edit' 				=> [
 		'breadcrumbs' 		=> [
 			'header' 			=> 'Editovať klienta',
 			'title' 			=> 'Zoznam klientov',
@@ -20,7 +33,7 @@ return [
 		],
 	],
 
-	'form' 			=> [
+	'form' 				=> [
 		'headers' 			=> [
 			'client_info' 		=> 'Informácie o klienta',
 			'contact_info' 		=> 'Kontaktná osoba',

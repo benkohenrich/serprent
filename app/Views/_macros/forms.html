@@ -46,7 +46,7 @@
       </label>
     {% endif %}
 
-    <select class="form-control"
+    <select class="form-control js-select"
         id="{{ name }}"
         name="{{ name }}"
         title="{{ i18n(label) }}"
@@ -55,6 +55,9 @@
         {{ global.ready_only ? 'readonly' }}
     >
       {% for option in options %}
+        {% if not required %}
+          <option></option>
+        {% endif %}
         <option value="{{ option.id }}" {{ default is not empty ? (option.id == default ? 'selected') }}>
           {{ option.name }}
         </option>
@@ -125,5 +128,89 @@
         {{ i18n(label) }}
       </label>
     {% endif %}
+  </div>
+{% endmacro %}
+
+{% macro input_datepicker(name, label = '', value = '', required = true, global) %}
+  <div class="form-group">
+    {% if label %}
+      <label for="{{ name }}">
+        {{ i18n(label) }}{% if required == true %}*{% endif %}
+      </label>
+    {% endif %}
+
+    <div class="input-group date" id="date-picker">
+      <span class="input-group-addon">
+        <span class="add-on">
+          <i class="fa fa-calendar"></i>
+        </span>
+      </span>
+
+      <input type="text" class="form-control"
+         id="{{ name }}"
+         name="{{ name }}"
+         value="{{ value is not empty ? value }}"
+         placeholder="{{ i18n(global.placeholder) }}"
+         {{ required ? 'required' }}
+         {{ global.disabled ? 'disabled' }}
+         {{ global.ready_only ? 'readonly' }}
+      >
+    </div>
+  </div>
+{% endmacro %}
+
+{% macro input_datetimepicker(name, label = '', value = '', required = true, global) %}
+  <div class="form-group">
+    {% if label %}
+      <label for="{{ name }}">
+        {{ i18n(label) }}{% if required == true %}*{% endif %}
+      </label>
+    {% endif %}
+
+    <div class="input-group date" id="datetime-picker">
+      <span class="input-group-addon">
+        <span class="add-on">
+          <i class="fa fa-calendar"></i>
+        </span>
+      </span>
+
+      <input type="text" class="form-control"
+         id="{{ name }}"
+         name="{{ name }}"
+         value="{{ value is not empty ? value }}"
+         placeholder="{{ i18n(global.placeholder) }}"
+         {{ required ? 'required' }}
+         {{ global.disabled ? 'disabled' }}
+         {{ global.ready_only ? 'readonly' }}
+      >
+    </div>
+  </div>
+{% endmacro %}
+
+{% macro input_timepicker(name, label = '', value = '', required = true, global) %}
+  <div class="form-group">
+    {% if label %}
+      <label for="{{ name }}">
+        {{ i18n(label) }}{% if required == true %}*{% endif %}
+      </label>
+    {% endif %}
+
+    <div class="input-group date" id="time-picker">
+      <span class="input-group-addon">
+        <span class="add-on">
+          <i class="fa fa-clock"></i>
+        </span>
+      </span>
+
+      <input type="text" class="form-control"
+         id="{{ name }}"
+         name="{{ name }}"
+         value="{{ value is not empty ? value }}"
+         placeholder="{{ i18n(global.placeholder) }}"
+         {{ required ? 'required' }}
+         {{ global.disabled ? 'disabled' }}
+         {{ global.ready_only ? 'readonly' }}
+      >
+    </div>
   </div>
 {% endmacro %}
