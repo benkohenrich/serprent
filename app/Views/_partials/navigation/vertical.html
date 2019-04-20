@@ -29,11 +29,17 @@
         </div>
       </li>
 
-      {% include '_partials/navigation/_sections/clients.html' %}
+      {% if self.permissions['clients.management'] %}
+        {% include '_partials/navigation/_sections/clients.html' %}
+      {% endif %}
 
-      {% include '_partials/navigation/_sections/users.html' %}
+      {% if self.permissions['users.management'] %}
+        {% include '_partials/navigation/_sections/users.html' %}
+      {% endif %}
 
-      {% include '_partials/navigation/_sections/cards.html' %}
+      {% if self.permissions['cards.management'] %}
+        {% include '_partials/navigation/_sections/cards.html' %}
+      {% endif %}
 
     </ul>
 

@@ -62,7 +62,6 @@ abstract class ModelHelper
 	}
 
 	/**
-	 * @param Summarizable|Summarizable[] $object
 	 * @return array
 	 */
 	public static function prepare($object) {

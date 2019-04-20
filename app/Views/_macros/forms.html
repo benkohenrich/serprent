@@ -102,7 +102,8 @@
         {{ required ? 'required' }}
         {{ global.disabled ? 'disabled' }}
         {{ global.ready_only ? 'readonly' }}
-        {% if pattern is not empty %}pattern="{{ pattern }}"{% endif %}
+        {% if pattern %}pattern="{{ pattern }}"{% endif %}
+        {% if global.equal_to %}data-parsley-equalto="{{ global.equal_to }}"{% endif %}
     >
   </div>
 {% endmacro %}

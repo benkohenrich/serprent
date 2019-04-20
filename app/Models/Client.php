@@ -43,6 +43,12 @@ class Client extends Model
 		[ 'name' ]
 	];
 
+	/**
+	 * @param array $filter
+	 * @param array $ordering
+	 * @param array $additional_params
+	 * @return array
+	 */
 	public static function find_all($filter = [], $ordering = [], $additional_params = [])
 	{
 		$conditions 					= [];
@@ -80,6 +86,10 @@ class Client extends Model
 		];
 	}
 
+	/**
+	 * @param $ordering
+	 * @return string
+	 */
 	private static function order($ordering)
 	{
 		$order 		= '';
@@ -98,6 +108,9 @@ class Client extends Model
 		return $order;
 	}
 
+	/**
+	 * @return array
+	 */
 	public function summary()
 	{
 		$client = [

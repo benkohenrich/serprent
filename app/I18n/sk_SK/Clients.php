@@ -7,6 +7,7 @@ return [
 			'header' 			=> 'Klienti',
 			'title' 			=> 'Zoznam klientov',
 		],
+
 		'table' 			=> [
 			'name' 				=> 'Názov klienta',
 			'type' 				=> 'Typ',
@@ -14,6 +15,10 @@ return [
 			'contact_name' 		=> 'Kontaktná osoba',
 			'is_active' 		=> 'Status',
 			'controls' 			=> 'Možnosti',
+		],
+
+		'buttons' 			=> [
+			'create' 			=> 'Pridať klienta'
 		]
 	],
 
@@ -63,6 +68,13 @@ return [
 	'enums' 			=> [
 		'type' 				=> [
 			'gym' 				=> 'Posilňovňa'
+		]
+	],
+
+	'booleans' 			=> [
+		'is_active' 		=> [
+			'1' 				=> 'Aktívny',
+			'0' 				=> 'Neaktívny',
 		]
 	]
 ];

@@ -32,13 +32,34 @@ return [
 		]
 	],
 
-	'controls' 		=> [
-		'submit' 					=> 'Uložiť formulár',
-		'edit' 						=> 'Editovať',
-		'view' 						=> 'Detail',
-		'delete' 					=> 'Vymazať',
-		'all' 						=> 'Všetky',
-		'logout' 					=> 'Odhlásiť sa',
-		'hide' 						=> 'Skryť platbu'
+	'controls' 			=> [
+		'submit' 			=> 'Uložiť formulár',
+		'edit' 				=> 'Editovať',
+		'view' 				=> 'Detail',
+		'delete' 			=> 'Vymazať',
+		'all' 				=> 'Všetky',
+		'logout' 			=> 'Odhlásiť sa',
+		'hide' 				=> 'Skryť platbu'
 	],
+
+	'roles' 			=> [
+		'superadmin' 		=> 'Superadmin',
+		'administrator' 	=> 'Administrátor',
+		'user' 				=> 'Používateľ',
+	],
+
+	'permissions' 		=> [
+		'auth' 				=> [
+			'login' 			=> 'Používateľ sa môže prihlásiť do systému'
+		],
+		'users' 			=> [
+			'management' 		=> 'Používateľ môže zmeniť ostatných používateľov'
+		],
+		'clients' 			=> [
+			'management' 		=> 'Používateľ môže zmeniť klientov'
+		],
+		'cards' 			=> [
+			'management' 		=> 'Používateľ môže zmeniť karty'
+		]
+	]
 ];

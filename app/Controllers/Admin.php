@@ -45,7 +45,8 @@ class Admin extends Controller
 					'id' 					=> $this->user->id,
 					'permissions' 			=> $this->auth->permissions(),
 					'role_id' 				=> $this->user->get_role()->id,
-					'language_code' 		=> $this->user->get_language_code()
+					'language_code' 		=> $this->user->get_language_code(),
+					'client' 				=> $this->user->client,
 				],
 				'system_roles' 			=> System::config('app.system_roles')
 			]);

@@ -12,6 +12,7 @@
 $config = [
 	'site_name' 								=> 'Serprent',
 	'minimal_password_length' 					=> 8,
+	'password_pattern' 							=> '((?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{6,20})',
 
 	'system_roles' 								=> [
 		'superadmin' 								=> 1,

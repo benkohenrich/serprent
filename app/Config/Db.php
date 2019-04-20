@@ -62,9 +62,8 @@ $config[ DEVELOPMENT ] = [
 			'hostname'		=> '127.0.0.1',
 			'username'		=> 'root',
 			'password'		=> '',
-			'database'		=> 'seprent_cms',
-			'port'			=> 3306,
 			'database'		=> 'serprent_cms',
+			'port'			=> 3307,
 			'sock'			=> '',
 			'charset' 		=> 'utf8'
 		]

@@ -8,6 +8,7 @@ use Appendix\Libraries\Input;
 use Controllers\Admin;
 use Appendix\Exceptions\PageNotFound;
 use Helpers\DataTableHelper;
+use Helpers\ModelHelper;
 use Helpers\Responder;
 use Helpers\Utils;
 use Libraries\Enums\Enums;
@@ -44,9 +45,10 @@ class Clients extends Admin
 			$filter 							= DataTableHelper::create_filter_array();
 			$ordering 							= DataTableHelper::create_ordering_array();
 
-			list($total_items, $clients) 		= Client::find_all($filter, $ordering);
+			list($total_items, $response) 		= Client::find_all($filter, $ordering);
 
-			$table 		= new TableBuilder();
+			$table 								= new TableBuilder();
+			$clients 							= ModelHelper::prepare($response);
 
 			/** @var Client $client */
 			foreach ($clients as $client)
@@ -54,14 +56,14 @@ class Clients extends Admin
 				$row 		= new RowBuilder();
 				$controls 	= new ControlsBuilder();
 
-				$row->add($client->name);
-				$row->add($client->type);
-				$row->add(sprintf("%s %s %s", $client->street, $client->city, $client->zip));
-				$row->add($client->contact_name);
-				$row->add($client->is_active);
+				$row->add($client['name']);
+				$row->add(I18n::load('clients.enums.type.' . $client['type']));
+				$row->add(sprintf("%s %s %s", $client['street'], $client['city'], $client['zip']));
+				$row->add($client['contact_name']);
+				$row->add(I18n::load('clients.booleans.is_active.' . $client['is_active']));
 
-				$controls->add('edit', Router::uri([ 'clients', 'edit', $client->id ]));
-				$controls->add('remove', Router::uri([ 'clients', 'remove', $client->id ]));
+				$controls->add('edit', Router::uri([ 'clients', 'edit', $client['id'] ]));
+				$controls->add('remove', Router::uri([ 'clients', 'remove', $client['id'] ]));
 
 				$row->add($controls->data());
 
@@ -75,14 +77,14 @@ class Clients extends Admin
 		else
 		{
 			$this->view->register([
+				'page_title' 				=> I18n::load('clients.overview.breadcrumbs.header'),
+				'page' 						=> 'overview_clients',
 				'breadcrumbs' 				=> [
 					[
 						'title' 			=> I18n::load('clients.overview.breadcrumbs.title'),
 						'url' 				=> Router::uri([ 'clients' ])
 					],
 				],
-				'page_title' => I18n::load('clients.overview.breadcrumbs.header'),
-				'page' 						=> 'overview_clients',
 			]);
 		}
 	}
