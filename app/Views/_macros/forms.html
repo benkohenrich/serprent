@@ -112,7 +112,7 @@
   <input type="hidden" name="{{ name }}{{ multiple ? '[]' }}" id="{{ name }}" value="{{ value }}" required>
 {% endmacro %}
 
-{% macro checkbox(name, label, checked = false, required = false, global) %}
+{% macro checkbox(name, label, checked = false, required = false, global, disabled = false) %}
   <div class="checkbox checkbox-inline">
     <input name="{{ name }}" type="hidden" value="0" {{ disabled ? 'disabled' }} checked>
     <input type="checkbox"
@@ -121,12 +121,12 @@
         value="1"
         {{ checked ? 'checked' }}
         {{ required ? 'required' }}
-        {{ global.disabled ? 'disabled' }}
+        {{ disabled ? 'disabled' }}
     >
 
     {% if label %}
       <label for="{{ name }}">
-        {{ i18n(label) }}
+        <span>{{ i18n(label) }}</span>
       </label>
     {% endif %}
   </div>

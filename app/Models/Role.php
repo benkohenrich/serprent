@@ -43,7 +43,7 @@ class Role extends \Appendix\Models\Role
 		return $role_permissions;
 	}
 
-	public static function get_roles()
+	public static function get_roles($role_id)
 	{
 		$__roles = [];
 
@@ -52,6 +52,7 @@ class Role extends \Appendix\Models\Role
 			$__roles = Model::prepare(Role::all([
 				'select' 		=> 'id, name',
 				'order' 		=> 'id ASC',
+				'conditions' 	=> [ 'id >= ?', $role_id ]
 			]));
 		}
 		catch (RecordNotFound $e)

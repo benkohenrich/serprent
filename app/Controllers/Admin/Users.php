@@ -148,7 +148,7 @@ class Users extends Admin
 
 	private function fill_register()
 	{
-		$roles 		= Role::get_roles();
+		$roles 		= Role::get_roles($this->user->role_id);
 
 		foreach($roles as &$role)
 		{
