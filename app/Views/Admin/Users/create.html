@@ -67,13 +67,11 @@
           <div class="ibox-content">
 
             <div class="row">
-              <div class="col-sm-12">
+              <div class="col-sm-4">
                 {{ forms_macro.select('role_id', 'users.form.inputs.role_id', roles, '', true, _context) }}
               </div>
-            </div>
 
-            <div class="row">
-              <div class="col-sm-12">
+              <div class="col-sm-8">
                 <label>{{ i18n('users.form.inputs.permissions') ~ '*' }}</label>
 
                 {% for permission in permissions %}
