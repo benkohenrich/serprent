@@ -45,11 +45,6 @@ class User extends Model
 		'email', 'username', 'password', 'name', 'surname', 'role_id', 'language_id', 'client_id'
 	];
 
-	public static $validate_by_custom 	= [
-		'password[minimal_password_length]',
-		'password_again[compare_to_confirm]',
-	];
-
 	static $belongs_to = [
 		[
 			'client',
@@ -161,9 +156,9 @@ class User extends Model
 	 */
 	public function minimal_password_length()
 	{
-		if (!empty($this->password) AND Input::instance()->body('password'))
+		if (!empty($this->password))
 		{
-			if (strlen(Input::instance()->body('password')) < System::config('app.minimal_password_length'))
+			if (strlen($this->password) < System::config('app.minimal_password_length'))
 				return FALSE;
 		}
 
@@ -171,16 +166,26 @@ class User extends Model
 	}
 
 	/**
+	 * @param $pass1
+	 * @param $pass2
 	 * @return bool
 	 */
-	public function compare_to_confirm()
+	public function compare_to_confirm($pass1, $pass2)
 	{
-		if (Input::instance()->body('password_again'))
-		{
-			$pass1 							= Input::instance()->body('password');
-			$pass2 							= Input::instance()->body('password_again');
+		if (!empty($pass1) AND !empty($pass2) AND $pass1 !== $pass2)
+			return FALSE;
 
-			if ($pass1 !== $pass2)
+		return TRUE;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function pattern_confirm()
+	{
+		if (!empty($this->password) AND !empty(System::config('app.password_pattern')))
+		{
+			if (!preg_match(System::config('app.password_pattern'), $this->password))
 				return FALSE;
 		}
 

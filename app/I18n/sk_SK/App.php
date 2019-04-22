@@ -61,5 +61,11 @@ return [
 		'cards' 			=> [
 			'management' 		=> 'Používateľ môže zmeniť karty'
 		]
+	],
+
+	'languages' 		=> [
+		'slovak' 			=> 'Slovenský',
+		'hungarian' 		=> 'Maďarský',
+		'english' 			=> 'Anglický',
 	]
 ];

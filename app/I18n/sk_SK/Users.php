@@ -50,6 +50,13 @@ return [
 		'flash' 			=> [
 			'success' 			=> 'Úspešné uloženie',
 			'failure' 			=> 'Nepodarilo sa uložiť'
+		],
+
+		'errors' 			=> [
+			'email_used' 		=> 'E-mail už existuje',
+			'password_mismatch' => 'Heslá nie sú rovnaké',
+			'password_length' 	=> 'Dĺžka hesla nie je dosť dlhé',
+			'pattern_match' 	=> 'Heslo sa nezhoduje so vzorom',
 		]
 	],
 

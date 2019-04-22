@@ -5,6 +5,9 @@ namespace Controllers\Admin;
 use Appendix\Core\I18n;
 use Appendix\Core\Router;
 use Appendix\Libraries\Input;
+use Appendix\Models\Language;
+use Appendix\Models\Permission;
+use Appendix\Models\UserInfo;
 use Controllers\Admin;
 use Appendix\Exceptions\PageNotFound;
 use Helpers\DataTableHelper;
@@ -119,24 +122,88 @@ class Users extends Admin
 		]);
 	}
 
-	private function save(User $user, $attributes)
+	private function 		save(User $user, $attributes)
 	{
 		$errors 					= new \Appendix\Libraries\Errors();
 		$parsed_attributes 			= Utils::parse_input($user, $attributes);
 
+		$this->db->transaction('start');
+
+		if ($user->is_new_record())
+		{
+			if (($existing_email = User::get_first([ 'client_id' => $parsed_attributes['client_id'], 'email' => $parsed_attributes['email'] ])))
+				$errors->add('email', I18n::load('users.form.errors.email_used'));
+
+			if ($user->compare_to_confirm($attributes['password'], $attributes['password_again']))
+			{
+				$user->password = $this->auth->hash($attributes['password']);
+
+				if (!$user->minimal_password_length())
+					$errors->add('email', I18n::load('users.form.errors.password_length'));
+
+				if (!$user->pattern_confirm())
+					$errors->add('email', I18n::load('users.form.errors.pattern_match'));
+			}
+			else
+			{
+				$errors->add('password', I18n::load('users.form.errors.password_mismatch'));
+			}
+		}
+
 		$user->name 				= $parsed_attributes['name'];
 		$user->surname 				= $parsed_attributes['surname'];
+		$user->username 			= sprintf("%s-%s", $parsed_attributes['email'], $parsed_attributes['client_id']);
+		$user->client_id 			= $parsed_attributes['client_id'];
+		$user->role_id 				= $parsed_attributes['role_id'];
+		$user->email 				= $parsed_attributes['email'];
+		$user->language_id 			= $parsed_attributes['language_id'];
 
 		if (!is_null($parsed_attributes['is_active']))
 			$user->is_active 		= $parsed_attributes['is_active'];
 
 		if (!$user->save())
-		{
 			$errors->merge_others($user->errors->raw());
+		else
+		{
+			if (!empty($attributes['permissions'][$user->role_id]))
+			{
+				$user_role_info = new UserInfo([
+					'user_id' 		=> $user->id,
+					'role_id' 		=> $user->role_id,
+					'value' 		=> 1
+				]);
+
+				if (!$user_role_info->save())
+					$errors->merge_others($user_role_info->errors->raw());
+				else
+				{
+					foreach ($attributes['permissions'][$user->role_id] as $permission_id => $value)
+					{
+						if ($value ===  "0")
+						{
+							$user_permission_info 	= new UserInfo([
+								'user_id' 				=> $user->id,
+								'permission_id' 		=> $permission_id,
+								'value' 				=> 0
+							]);
+
+							if (!$user_permission_info->save())
+								$errors->merge_others($user_permission_info->errors->raw());
+						}
+					}
+				}
+			}
+		}
+
+		if (!$errors->is_empty())
+		{
+			$this->db->transaction('stop');
 
 			echo Responder::initialize()->respond(422, Utils::reformat_errors($errors));
 			die;
 		}
+
+		$this->db->transaction('finish');
 
 		Input::set_session('user_save_success', I18n::load('users.form.flash.success'));
 
@@ -155,9 +222,21 @@ class Users extends Admin
 			$role['name'] 		= I18n::load('app.roles.' . $role['name']);
 		}
 
+		$languages = Language::get_all([
+			'conditions' 	=> [
+				'is_deleted' 	=> 0
+			]
+		]);
+
+		foreach($languages as &$language)
+		{
+			$language->name 		= I18n::load('app.languages.' . $language->name);
+		}
+
 		$this->view->register([
 			'roles' 			=> $roles,
-			'permissions' 		=> Role::get_permissions()
+			'permissions' 		=> Role::get_permissions(),
+			'languages' 		=> $languages
 		]);
 	}
 }
