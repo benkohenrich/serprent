@@ -165,7 +165,6 @@ class Clients extends Admin
 		]);
 	}
 
-
 	/**
 	 * @param Client $client
 	 * @param array $attributes

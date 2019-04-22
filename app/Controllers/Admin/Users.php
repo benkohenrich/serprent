@@ -122,7 +122,51 @@ class Users extends Admin
 		]);
 	}
 
-	private function 		save(User $user, $attributes)
+	public function edit($user_id)
+	{
+		/** @var User $user */
+		$user 			= User::get_first($user_id);
+
+		if (Input::is_ajax_request())
+		{
+			$this->view->set_file(FALSE);
+			$attributes 			= [];
+
+			if (($form_data = json_decode($this->input->body('form_data'), TRUE)))
+				parse_str($form_data, $attributes);
+
+			if (!empty($attributes['save']))
+			{
+				$this->save($user, $attributes);
+			}
+		}
+
+		$this->fill_register();
+
+		$save_success 		= Input::session('user_save_success');
+		Input::destroy_session('user_save_success');
+
+		$this->view->register([
+			'page_title' 				=> I18n::load('users.edit.breadcrumbs.header'),
+			'page' 						=> 'edit_user',
+			'form_id' 					=> 'edit-user',
+			'user' 						=> $user,
+			'save_success' 				=> $save_success,
+			'assigned_permissions' 		=> Role::get_permissions_for_user($user_id),
+			'breadcrumbs' 				=> [
+				[
+					'title' 				=> I18n::load('users.edit.breadcrumbs.title'),
+					'url' 					=> Router::uri([ 'users' ])
+				],
+				[
+					'title' 				=> I18n::load('users.edit.breadcrumbs.active'),
+					'url' 					=> Router::uri([ 'users', 'edit', $user->id ])
+				],
+			]
+		]);
+	}
+
+	private function save(User $user, $attributes)
 	{
 		$errors 					= new \Appendix\Libraries\Errors();
 		$parsed_attributes 			= Utils::parse_input($user, $attributes);
@@ -148,14 +192,15 @@ class Users extends Admin
 			{
 				$errors->add('password', I18n::load('users.form.errors.password_mismatch'));
 			}
+
+			$user->username 		= sprintf("%s-%s", $parsed_attributes['email'], $parsed_attributes['client_id']);
+			$user->email 			= $parsed_attributes['email'];
 		}
 
 		$user->name 				= $parsed_attributes['name'];
 		$user->surname 				= $parsed_attributes['surname'];
-		$user->username 			= sprintf("%s-%s", $parsed_attributes['email'], $parsed_attributes['client_id']);
 		$user->client_id 			= $parsed_attributes['client_id'];
 		$user->role_id 				= $parsed_attributes['role_id'];
-		$user->email 				= $parsed_attributes['email'];
 		$user->language_id 			= $parsed_attributes['language_id'];
 
 		if (!is_null($parsed_attributes['is_active']))
@@ -167,29 +212,40 @@ class Users extends Admin
 		{
 			if (!empty($attributes['permissions'][$user->role_id]))
 			{
-				$user_role_info = new UserInfo([
-					'user_id' 		=> $user->id,
-					'role_id' 		=> $user->role_id,
-					'value' 		=> 1
+				$user_role_info = UserInfo::get_first([
+					'conditions' => [
+						'user_id = ? AND role_id IS NOT NULL AND value IS TRUE', $user->id
+					]
 				]);
+
+				if (!($user_role_info))
+					$user_role_info = new UserInfo();
+
+				$user_role_info->user_id  	= $user->id;
+				$user_role_info->role_id  	= $user->role_id;
+				$user_role_info->value  	= 1;
 
 				if (!$user_role_info->save())
 					$errors->merge_others($user_role_info->errors->raw());
-				else
-				{
-					foreach ($attributes['permissions'][$user->role_id] as $permission_id => $value)
-					{
-						if ($value ===  "0")
-						{
-							$user_permission_info 	= new UserInfo([
-								'user_id' 				=> $user->id,
-								'permission_id' 		=> $permission_id,
-								'value' 				=> 0
-							]);
 
-							if (!$user_permission_info->save())
-								$errors->merge_others($user_permission_info->errors->raw());
-						}
+				UserInfo::delete_all([
+					'conditions' => [
+						'user_id = ? AND permission_id IS NOT NULL AND value IS FALSE', $user->id
+					]
+				]);
+
+				foreach ($attributes['permissions'][$user->role_id] as $permission_id => $value)
+				{
+					if ($value ===  "0")
+					{
+						$user_permission_info 	= new UserInfo([
+							'user_id' 				=> $user->id,
+							'permission_id' 		=> $permission_id,
+							'value' 				=> 0
+						]);
+
+						if (!$user_permission_info->save())
+							$errors->merge_others($user_permission_info->errors->raw());
 					}
 				}
 			}

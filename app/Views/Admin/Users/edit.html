@@ -1,0 +1,128 @@
+{% extends '_layout/base.html' %}
+
+{% block content %}
+
+  <form id="{{ form_id }}" method="post" action="{{ uri([ 'users', 'edit', user.id ]) }}" enctype="multipart/form-data">
+
+    <input type="hidden" name="save" value="1">
+    <input type="hidden" name="client_id" value="{{ user.client.id }}">
+
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="ibox float-e-margins">
+          <div class="ibox-title">
+            <h5>{{ i18n('users.form.headers.user_info') }}</h5>
+          </div>
+          <div class="ibox-content">
+            <div class="row">
+              <div class="col-sm-6">
+                {{ forms_macro.input_text('name', 'users.form.inputs.name', user.name, true, _context) }}
+              </div>
+
+              <div class="col-sm-6">
+                {{ forms_macro.input_text('surname', 'users.form.inputs.surname', user.surname, true, _context) }}
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-sm-6">
+                {% set equal_to = '#password_again' %}
+                {% set disabled = true %}
+                {{ forms_macro.input_password('password', 'users.form.inputs.password', config('app.password_pattern'),
+                    false, _context) }}
+                {% set disabled = '' %}
+                {% set equal_to = '' %}
+              </div>
+
+              <div class="col-sm-6">
+                {% set equal_to = '#password' %}
+                {% set disabled = true %}
+                {{ forms_macro.input_password('password_again', 'users.form.inputs.password_again',
+                    config('app.password_pattern'), false, _context) }}
+                {% set disabled = '' %}
+                {% set equal_to = '' %}
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-sm-6">
+                {% set disabled = true %}
+                {{ forms_macro.input_email('email', 'users.form.inputs.email', user.email, true, _context) }}
+                {% set disabled = '' %}
+              </div>
+
+              <div class="col-sm-6">
+                {{ forms_macro.select('language_id', 'users.form.inputs.language_id', languages, user.language_id,
+                    true, _context) }}
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-sm-6">
+                {{ forms_macro.checkbox('is_active', 'users.form.inputs.is_active', (user.is_active) ? true : false,
+                  false, _context) }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-6">
+        <div class="ibox float-e-margins">
+          <div class="ibox-title">
+            <h5>{{ i18n('users.form.headers.role_info') }}</h5>
+          </div>
+          <div class="ibox-content">
+
+            <div class="row">
+              <div class="col-sm-4">
+                {{ forms_macro.select('role_id', 'users.form.inputs.role_id', roles, user.role_id, true, _context) }}
+              </div>
+
+              <div class="col-sm-8">
+                <label>{{ i18n('users.form.inputs.permissions') ~ '*' }}</label>
+
+                {% for permission in permissions %}
+                  {% set checked = true %}
+
+                  {% if assigned_permissions.role == permission.role_id %}
+                    {% for permission_id, value in assigned_permissions.permissions %}
+                      {% if permission_id == permission.permission_id and value == '0' %}
+                        {% set checked = false %}
+                      {% endif %}
+                    {% endfor %}
+                  {% endif %}
+
+                  <div class="row role-permissions" data-role-id="{{ permission.role_id }}" style="display: none">
+                    <div class="col-lg-12">
+                      {{ forms_macro.checkbox('permissions[' ~ permission.role_id ~ '][' ~ permission.permission_id ~ ']',
+                        'app.permissions.' ~ permission.code, checked, false, _context) }}
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </form>
+
+{% endblock %}
+
+{% block javascript %}
+  <script>
+    $(document).ready(function () {
+
+      $('#role_id').on('change', function () {
+        var selectedRole  = $('#role_id option:selected').val();
+
+        $('.role-permissions').hide();
+        $('.role-permissions[data-role-id=' + selectedRole + ']').show();
+      }).trigger('change');
+
+    });
+  </script>
+{% endblock %}

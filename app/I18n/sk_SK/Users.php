@@ -25,7 +25,15 @@ return [
 		'breadcrumbs' 		=> [
 			'header' 			=> 'Nový používateľ',
 			'title' 			=> 'Zoznam používatelov',
-			'active' 			=> 'Pridať nového používatela',
+			'active' 			=> 'Pridať nového používateľa',
+		],
+	],
+
+	'edit' 				=> [
+		'breadcrumbs' 		=> [
+			'header' 			=> 'Editovať používateľa',
+			'title' 			=> 'Zoznam používatelov',
+			'active' 			=> 'Editovať existujúceho používateľa',
 		],
 	],
 
