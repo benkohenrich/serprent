@@ -1,0 +1,32 @@
+{% extends '_layout/base.html' %}
+
+{% block content %}
+
+  <form id="{{ form_id }}" method="post" action="{{ uri([ 'cards', 'edit', card.id ]) }}" enctype="multipart/form-data">
+
+    <input type="hidden" name="save" value="1">
+    <input type="hidden" name="client_id" value="{{ card.client.id }}">
+
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="ibox float-e-margins">
+          <div class="ibox-title">
+            <h5>{{ i18n('cards.form.headers.card_info') }}</h5>
+          </div>
+          <div class="ibox-content">
+            <div class="row">
+              <div class="col-sm-6">
+                {{ forms_macro.input_text('code', 'cards.form.inputs.code', card.code, true, _context) }}
+              </div>
+              <div class="col-sm-6">
+                {{ forms_macro.checkbox('is_active', 'cards.form.inputs.is_active', (card.is_active) ? true : false, false, _context) }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </form>
+
+{% endblock %}

@@ -123,6 +123,9 @@ class Clients extends Admin
 		]);
 	}
 
+	/**
+	 * @param $client_id
+	 */
 	public function edit($client_id)
 	{
 		/** @var Client $client */

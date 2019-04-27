@@ -122,6 +122,9 @@ class Users extends Admin
 		]);
 	}
 
+	/**
+	 * @param $user_id
+	 */
 	public function edit($user_id)
 	{
 		/** @var User $user */

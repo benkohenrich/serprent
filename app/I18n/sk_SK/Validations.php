@@ -41,5 +41,15 @@ return [
 		'client_id' 		=> [
 			'present' 			=> 'Klient je povinný',
 		],
-	]
+	],
+
+	'cards' 			=> [
+		'client_id' 				=> [
+			'present' 			=> 'Klient je povinný',
+		],
+		'code' 			=> [
+			'present' 			=> 'Kód je povinná',
+			'unique' 			=> 'Kód už existuje',
+		],
+	],
 ];
