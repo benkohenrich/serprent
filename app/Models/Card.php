@@ -5,6 +5,8 @@ namespace Models;
 
 use ActiveRecord\DateTime;
 use Appendix\Core\Model;
+use Appendix\Exceptions\PageNotFound;
+use Helpers\ModelHelper;
 
 /**
  * Class Card
@@ -21,6 +23,7 @@ use Appendix\Core\Model;
  *
  * Relations:
  * @property Client client
+ * @property UserCard user_card
  */
 class Card extends Model
 {
@@ -42,6 +45,14 @@ class Card extends Model
 		],
 	];
 
+	static $has_one = [
+		[
+			'user_card',
+			'foreign_key' 	=> 'card_id',
+			'class_name' 	=> UserCard::class
+		]
+	];
+
 	/**
 	 * @param array $filter
 	 * @param array $ordering
@@ -51,10 +62,13 @@ class Card extends Model
 	public static function find_all($filter = [], $ordering = [], $additional_params = [])
 	{
 		$conditions 					= [];
-		$conditions[0] 					= "is_deleted IS FALSE";
+		$conditions[0] 					= "cards.is_deleted IS FALSE";
 
 		$params 						= [];
-		$joins 							= [];
+		$joins 							= [
+			'LEFT JOIN user_cards ON cards.id = user_cards.card_id',
+			'LEFT JOIN system_users ON user_cards.user_id = system_users.id'
+		];
 
 		$params['conditions'] 			= $conditions;
 		$params['joins'] 				= $joins;
@@ -71,7 +85,7 @@ class Card extends Model
 
 		if (empty($params['order']))
 		{
-			$params['order'] 			= "id ASC";
+			$params['order'] 			= "cards.id ASC";
 		}
 
 		$params['joins'] 				= array_unique($params['joins']);
@@ -98,10 +112,29 @@ class Card extends Model
 			$column 		= $ordering['column'];
 			$direction 		= $ordering['direction'];
 
-			$order 		= sprintf("%s %s", $column, $direction);
+			if ($column == 'card_user')
+			{
+				return sprintf("system_users.name %s, system_users.surname %s", $direction, $direction);
+			}
+
+			$order 		= sprintf("cards.%s %s", $column, $direction);
 		}
 
 		return $order;
+	}
+
+	/**
+	 * @param $card_id
+	 * @return array
+	 * @throws PageNotFound
+	 */
+	public static function get($card_id)
+	{
+		/** @var Card $card */
+		if (!($card = self::get_first([ 'id' => $card_id, 'is_deleted' => FALSE])))
+			throw new PageNotFound;
+
+		return $card->summary();
 	}
 
 	/**
@@ -109,14 +142,15 @@ class Card extends Model
 	 */
 	public function summary()
 	{
-		$client = [
+		$card = [
 			'id' 				=> $this->id,
-			'client_id' 		=> $this->client_id,
 			'code' 				=> $this->code,
 			'is_active' 		=> $this->is_active,
 			'is_deleted' 		=> $this->is_deleted,
+			'card_user' 		=> ModelHelper::prepare($this->user_card),
+			'client' 			=> ModelHelper::prepare($this->client)
 		];
 
-		return $client;
+		return $card;
 	}
 }

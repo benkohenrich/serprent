@@ -15,6 +15,8 @@ use Libraries\Tables\ControlsBuilder;
 use Libraries\Tables\RowBuilder;
 use Libraries\Tables\TableBuilder;
 use Models\Card;
+use Models\User;
+use Models\UserCard;
 
 class Cards extends Admin
 {
@@ -51,7 +53,12 @@ class Cards extends Admin
 				$row 		= new RowBuilder();
 				$controls 	= new ControlsBuilder();
 
+				$card_user 	= !empty($card['card_user']['user']['full_name'])
+					? $card['card_user']['user']['full_name']
+					: "";
+
 				$row->add($card['code']);
+				$row->add($card_user);
 				$row->add(I18n::load('cards.booleans.is_active.' . $card['is_active']));
 
 				$controls->add('edit', Router::uri([ 'cards', 'edit', $card['id'] ]));
@@ -97,6 +104,8 @@ class Cards extends Admin
 			}
 		}
 
+		$this->fill_register();
+
 		$this->view->register([
 			'page_title' 				=> I18n::load('cards.create.breadcrumbs.header'),
 			'page' 						=> 'create_card',
@@ -116,12 +125,10 @@ class Cards extends Admin
 
 	/**
 	 * @param $card_id
+	 * @throws PageNotFound
 	 */
 	public function edit($card_id)
 	{
-		/** @var Card $card */
-		$card 			= Card::get_first($card_id);
-
 		if (Input::is_ajax_request())
 		{
 			$this->view->set_file(FALSE);
@@ -132,10 +139,16 @@ class Cards extends Admin
 
 			if (!empty($attributes['save']))
 			{
+				/** @var Card $card */
+				$card 		= Card::get_first($card_id);
+
 				$this->save($card, $attributes);
 			}
 		}
 
+		$this->fill_register();
+
+		$card 				= Card::get($card_id);
 		$save_success 		= Input::session('card_save_success');
 		Input::destroy_session('card_save_success');
 
@@ -152,7 +165,7 @@ class Cards extends Admin
 				],
 				[
 					'title' 				=> I18n::load('cards.edit.breadcrumbs.active'),
-					'url' 					=> Router::uri([ 'cards', 'edit', $card->id ])
+					'url' 					=> Router::uri([ 'cards', 'edit', $card['id'] ])
 				],
 			]
 		]);
@@ -167,6 +180,8 @@ class Cards extends Admin
 		$errors 					= new \Appendix\Libraries\Errors();
 		$parsed_attributes 			= Utils::parse_input($card, $attributes);
 
+		$this->db->transaction('start');
+
 		$card->code 				= $parsed_attributes['code'];
 		$card->client_id 			= $parsed_attributes['client_id'];
 
@@ -174,12 +189,36 @@ class Cards extends Admin
 			$card->is_active 		= $parsed_attributes['is_active'];
 
 		if (!$card->save())
-		{
 			$errors->merge_others($card->errors->raw());
+
+		UserCard::delete_all([
+			'conditions' 	=> [
+				'card_id' 		=> $card->id,
+				'client_id' 	=> $card->client_id
+			]
+		]);
+
+		if (!empty($attributes['user_id']))
+		{
+			$user_card 		= new UserCard([
+				'client_id' 	=> $card->client_id,
+				'user_id' 		=> $attributes['user_id'],
+				'card_id' 		=> $card->id
+			]);
+
+			if (!$user_card->save())
+				$errors->merge_others($user_card->errors->raw());
+		}
+
+		if (!$errors->is_empty())
+		{
+			$this->db->transaction('stop');
 
 			echo Responder::initialize()->respond(422, Utils::reformat_errors($errors));
 			die;
 		}
+
+		$this->db->transaction('finish');
 
 		Input::set_session('card_save_success', I18n::load('cards.form.flash.success'));
 
@@ -187,5 +226,14 @@ class Cards extends Admin
 			'route' 		=> Router::uri([ 'cards', 'edit', $card->id ])
 		]);
 		die;
+	}
+
+	private function fill_register()
+	{
+		$users 		= User::find_all_for_client($this->user->client_id);
+
+		$this->view->register([
+			'users' 	=> $users
+		]);
 	}
 }

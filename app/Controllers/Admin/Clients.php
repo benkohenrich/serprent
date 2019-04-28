@@ -57,9 +57,9 @@ class Clients extends Admin
 				$controls 	= new ControlsBuilder();
 
 				$row->add($client['name']);
-				$row->add(I18n::load('clients.enums.type.' . $client['type']));
 				$row->add(sprintf("%s %s %s", $client['street'], $client['city'], $client['zip']));
 				$row->add($client['contact_name']);
+				$row->add(I18n::load('clients.enums.type.' . $client['type']));
 				$row->add(I18n::load('clients.booleans.is_active.' . $client['is_active']));
 
 				$controls->add('edit', Router::uri([ 'clients', 'edit', $client['id'] ]));
@@ -125,12 +125,10 @@ class Clients extends Admin
 
 	/**
 	 * @param $client_id
+	 * @throws PageNotFound
 	 */
 	public function edit($client_id)
 	{
-		/** @var Client $client */
-		$client 		= Client::get_first($client_id);
-
 		if (Input::is_ajax_request())
 		{
 			$this->view->set_file(FALSE);
@@ -141,10 +139,14 @@ class Clients extends Admin
 
 			if (!empty($attributes['save']))
 			{
+				/** @var Client $client */
+				$client 		= Client::get_first($client_id);
+
 				$this->save($client, $attributes);
 			}
 		}
 
+		$client 			= Client::get($client_id);
 		$save_success 		= Input::session('client_save_success');
 		Input::destroy_session('client_save_success');
 
@@ -162,7 +164,7 @@ class Clients extends Admin
 				],
 				[
 					'title' 				=> I18n::load('clients.edit.breadcrumbs.active'),
-					'url' 					=> Router::uri([ 'clients', 'edit', $client->id ])
+					'url' 					=> Router::uri([ 'clients', 'edit', $client['id'] ])
 				],
 			]
 		]);

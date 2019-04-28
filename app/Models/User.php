@@ -6,9 +6,9 @@ namespace Models;
 use ActiveRecord\DateTime;
 use Appendix\Core\Model;
 use Appendix\Core\System;
-use Appendix\Libraries\Input;
 use Appendix\Models\Language;
 use Appendix\Models\UserInfo;
+use Appendix\Exceptions\PageNotFound;
 use Helpers\ModelHelper;
 
 /**
@@ -193,13 +193,42 @@ class User extends Model
 	}
 
 	/**
+	 * @param $company_id
+	 * @return array
+	 */
+	public static function find_all_for_client($company_id)
+	{
+		return self::get_all([
+			'conditions' 	=> [
+				'client_id' 	=> $company_id,
+				'is_active' 	=> TRUE,
+				'is_deleted' 	=> FALSE
+			]
+		]);
+	}
+
+	/**
+	 * @param $user_id
+	 * @return array
+	 * @throws PageNotFound
+	 */
+	public static function get($user_id)
+	{
+		/** @var User $user */
+		if (!($user = self::get_first([ 'id' => $user_id, 'is_deleted' => FALSE])))
+			throw new PageNotFound;
+
+		return $user->summary();
+	}
+
+	/**
 	 * @return array
 	 */
 	public function summary()
 	{
 		$user = [
 			'id' 				=> $this->id,
-			'client_id' 		=> $this->client_id,
+			'client' 			=> ModelHelper::prepare($this->client),
 			'full_name' 		=> $this->get_full_name(),
 			'role_id' 			=> $this->role_id,
 			'language_id' 		=> $this->language_id,
@@ -207,6 +236,8 @@ class User extends Model
 			'email' 			=> $this->email,
 			'is_active' 		=> $this->is_active,
 			'is_deleted' 		=> $this->is_deleted,
+			'name' 				=> $this->name,
+			'surname' 			=> $this->surname
 		];
 
 		return $user;

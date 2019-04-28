@@ -10,6 +10,7 @@ return [
 
 		'table' 			=> [
 			'code' 				=> 'Kód karty',
+			'card_user' 		=> 'Používateľ',
 			'is_active' 		=> 'Status',
 			'controls' 			=> 'Možnosti',
 		],
@@ -42,6 +43,7 @@ return [
 
 		'inputs' 			=> [
 			'code' 				=> 'Kód karty',
+			'user_id' 			=> 'Používateľ',
 			'is_active' 		=> 'Je aktívy?',
 		],
 

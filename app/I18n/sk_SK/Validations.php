@@ -44,12 +44,24 @@ return [
 	],
 
 	'cards' 			=> [
-		'client_id' 				=> [
+		'client_id' 		=> [
 			'present' 			=> 'Klient je povinný',
 		],
 		'code' 			=> [
-			'present' 			=> 'Kód je povinná',
+			'present' 		=> 'Kód je povinná',
 			'unique' 			=> 'Kód už existuje',
+		],
+	],
+
+	'user_cards' 		=> [
+		'client_id' 		=> [
+			'present' 			=> 'Klient je povinný',
+		],
+		'user_id' 			=> [
+			'present' 			=> 'Používateľ je povinný',
+		],
+		'card_id' 			=> [
+			'present' 			=> 'Karta je povinná',
 		],
 	],
 ];

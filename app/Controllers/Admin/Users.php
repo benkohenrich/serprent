@@ -124,12 +124,10 @@ class Users extends Admin
 
 	/**
 	 * @param $user_id
+	 * @throws PageNotFound
 	 */
 	public function edit($user_id)
 	{
-		/** @var User $user */
-		$user 			= User::get_first($user_id);
-
 		if (Input::is_ajax_request())
 		{
 			$this->view->set_file(FALSE);
@@ -140,12 +138,16 @@ class Users extends Admin
 
 			if (!empty($attributes['save']))
 			{
+				/** @var User $user */
+				$user 			= User::get_first($user_id);
+
 				$this->save($user, $attributes);
 			}
 		}
 
 		$this->fill_register();
 
+		$user 				= User::get($user_id);
 		$save_success 		= Input::session('user_save_success');
 		Input::destroy_session('user_save_success');
 
@@ -163,7 +165,7 @@ class Users extends Admin
 				],
 				[
 					'title' 				=> I18n::load('users.edit.breadcrumbs.active'),
-					'url' 					=> Router::uri([ 'users', 'edit', $user->id ])
+					'url' 					=> Router::uri([ 'users', 'edit', $user['id'] ])
 				],
 			]
 		]);

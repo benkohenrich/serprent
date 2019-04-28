@@ -5,10 +5,7 @@ namespace Models;
 
 use ActiveRecord\DateTime;
 use Appendix\Core\Model;
-use Appendix\Core\System;
-use Appendix\Libraries\Input;
-use Appendix\Models\UserInfo;
-use Helpers\ModelHelper;
+use Appendix\Exceptions\PageNotFound;
 
 /**
  * Class Client
@@ -106,6 +103,20 @@ class Client extends Model
 		}
 
 		return $order;
+	}
+
+	/**
+	 * @param $client_id
+	 * @return array
+	 * @throws PageNotFound
+	 */
+	public static function get($client_id)
+	{
+		/** @var Client $client */
+		if (!($client = self::get_first([ 'id' => $client_id, 'is_deleted' => FALSE])))
+			throw new PageNotFound;
+
+		return $client->summary();
 	}
 
 	/**

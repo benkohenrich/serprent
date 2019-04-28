@@ -19,6 +19,9 @@
                 {{ forms_macro.input_text('code', 'cards.form.inputs.code', card.code, true, _context) }}
               </div>
               <div class="col-sm-6">
+                {{ forms_macro.select('user_id', 'cards.form.inputs.user_id', users, card.card_user.user.id, false, _context) }}
+              </div>
+              <div class="col-sm-6">
                 {{ forms_macro.checkbox('is_active', 'cards.form.inputs.is_active', (card.is_active) ? true : false, false, _context) }}
               </div>
             </div>
