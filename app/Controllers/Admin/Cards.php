@@ -4,6 +4,7 @@ namespace Controllers\Admin;
 
 use Appendix\Core\I18n;
 use Appendix\Core\Router;
+use Appendix\Libraries\Errors;
 use Appendix\Libraries\Input;
 use Controllers\Admin;
 use Appendix\Exceptions\PageNotFound;
@@ -62,7 +63,9 @@ class Cards extends Admin
 				$row->add(I18n::load('cards.booleans.is_active.' . $card['is_active']));
 
 				$controls->add('edit', Router::uri([ 'cards', 'edit', $card['id'] ]));
-				$controls->add('remove', Router::uri([ 'cards', 'remove', $card['id'] ]));
+				$controls->add('remove', Router::uri([ 'cards', 'remove', $card['id'] ]), [
+					'confirm_message' => I18n::load('cards.delete.confirm_message')
+				]);
 
 				$row->add($controls->data());
 
@@ -149,6 +152,10 @@ class Cards extends Admin
 		$this->fill_register();
 
 		$card 				= Card::get($card_id);
+
+		if ($card['client']['id'] !== $this->user->client_id AND !$this->user->is_superadmin())
+			Router::redirect([ 'cards' ]);
+
 		$save_success 		= Input::session('card_save_success');
 		Input::destroy_session('card_save_success');
 
@@ -177,8 +184,9 @@ class Cards extends Admin
 	 */
 	private function save(Card $card, $attributes)
 	{
-		$errors 					= new \Appendix\Libraries\Errors();
+		$errors 					= new Errors();
 		$parsed_attributes 			= Utils::parse_input($card, $attributes);
+		$activity_code 				= ($card->is_new_record()) ? 'card.create' : 'card.edit';
 
 		$this->db->transaction('start');
 
@@ -220,6 +228,8 @@ class Cards extends Admin
 
 		$this->db->transaction('finish');
 
+		$this->event->notify($activity_code, ModelHelper::prepare($card));
+
 		Input::set_session('card_save_success', I18n::load('cards.form.flash.success'));
 
 		echo Responder::initialize()->respond(201, [
@@ -235,5 +245,61 @@ class Cards extends Admin
 		$this->view->register([
 			'users' 	=> $users
 		]);
+	}
+
+	/**
+	 * @param $card_id
+	 * @return false|string
+	 * @throws \Exception
+	 */
+	public function remove($card_id)
+	{
+		$this->view->set_file(FALSE);
+
+		$errors 		= new Errors();
+
+		$this->db->transaction('start');
+
+		/** @var Card $card */
+		if (!($card = Card::get_first([ 'id' => $card_id, 'is_deleted' => FALSE ])))
+		{
+			$errors->add('card', I18n::load('cards.errors.not_existing_card'));
+		}
+		else
+		{
+			if ($card->client_id !== $this->user->client_id)
+			{
+				$errors->add('card', I18n::load('cards.errors.client_mismatch'));
+			}
+
+			$card->is_deleted 		= 1;
+			$card->code 			= sprintf("%s-%s", $card->code, md5((new \DateTime())->format("Y-m-d H:i:s") . rand()));
+
+			if(!$card->save())
+			{
+				$errors->merge_others($card->errors->raw());
+			}
+			else
+			{
+				UserCard::delete_all([
+					'conditions' 	=> [
+						'card_id' 		=> $card->id
+					]
+				]);
+			}
+		}
+
+		if (!$errors->is_empty())
+		{
+			$this->db->transaction('stop');
+
+			return Responder::initialize()->respond(422, Utils::reformat_errors($errors));
+		}
+
+		$this->db->transaction('finish');
+
+		$this->event->notify('card.remove', ModelHelper::prepare($card));
+
+		return Responder::initialize()->respond(204);
 	}
 }

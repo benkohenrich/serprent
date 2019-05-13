@@ -8,7 +8,7 @@ class ControlsBuilder
 {
 	private $controls = [];
 
-	public function add($action, $uri, $modal = NULL)
+	public function add($action, $uri, $additional_data = [])
 	{
 		if (empty($action) AND is_null($action))
 			return;
@@ -16,7 +16,7 @@ class ControlsBuilder
 		if ($action == 'edit')
 		{
 			$this->controls[] = sprintf(
-				'<a href="%s" class="btn btn-primary" 
+				'<a href="%s" class="btn btn-primary btn-sm" 
 					title="' . I18n::load("app.controls.edit") . '"
 				>
 					<i class="fa fa-pen"></i>
@@ -27,12 +27,13 @@ class ControlsBuilder
 
 		if ($action == 'remove')
 		{
+			$confirm_message = !empty($additional_data['confirm_message'])
+				? $additional_data['confirm_message'] : '';
 			$this->controls[] = sprintf(
-				'<a href="%s" class="btn btn-primary alert-delete-button" 
-					data-confirm="'.I18n::load("users.delete.modal.confirm").'" 
-					data-cancel="' . I18n::load("users.delete.modal.cancel") . '" 
-					data-title="'.I18n::load("users.delete.modal.title").'"
+				'<a href="%s" class="btn btn-primary confirm-button btn-sm" 
 					title="' . I18n::load("app.controls.delete") . '"
+					data-confirm-message="' . sprintf("%s %s", I18n::load('app.plugins.toastr.confirm.delete'), $confirm_message) . '?"
+					data-success-event="confirmDeleteEvent"
 				>
 					<i class="fa fa-trash"></i>
 				</a>',

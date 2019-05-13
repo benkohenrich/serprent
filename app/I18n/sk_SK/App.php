@@ -29,6 +29,13 @@ return [
 	'plugins' 			=> [
 		'select2' 			=> [
 			'placeholder' 		=> 'Vyberte možnosť'
+		],
+		'toastr' 			=> [
+			'confirm' 			=> [
+				'delete' 			=> 'Naozaj chcete vymazať',
+				'yes' 				=> 'Áno',
+				'no' 				=> 'Nie',
+			]
 		]
 	],
 

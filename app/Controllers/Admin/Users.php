@@ -148,6 +148,10 @@ class Users extends Admin
 		$this->fill_register();
 
 		$user 				= User::get($user_id);
+
+		if ($user['client']['id'] !== $this->user->client_id AND !$this->user->is_superadmin())
+			Router::redirect([ 'users' ]);
+
 		$save_success 		= Input::session('user_save_success');
 		Input::destroy_session('user_save_success');
 
@@ -175,6 +179,7 @@ class Users extends Admin
 	{
 		$errors 					= new \Appendix\Libraries\Errors();
 		$parsed_attributes 			= Utils::parse_input($user, $attributes);
+		$activity_code 				= ($user->is_new_record()) ? 'user.create' : 'user.edit';
 
 		$this->db->transaction('start');
 
@@ -265,6 +270,8 @@ class Users extends Admin
 		}
 
 		$this->db->transaction('finish');
+
+		$this->event->notify($activity_code, ModelHelper::prepare($user));
 
 		Input::set_session('user_save_success', I18n::load('users.form.flash.success'));
 

@@ -221,6 +221,14 @@ class User extends Model
 		return $user->summary();
 	}
 
+	public function is_superadmin()
+	{
+		if ($this->role_id === System::config('app.system_roles.superadmin'))
+			return TRUE;
+
+		return FALSE;
+	}
+
 	/**
 	 * @return array
 	 */
@@ -237,7 +245,8 @@ class User extends Model
 			'is_active' 		=> $this->is_active,
 			'is_deleted' 		=> $this->is_deleted,
 			'name' 				=> $this->name,
-			'surname' 			=> $this->surname
+			'surname' 			=> $this->surname,
+			'is_superadmin' 	=> $this->is_superadmin(),
 		];
 
 		return $user;

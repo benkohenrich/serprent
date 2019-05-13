@@ -36,6 +36,15 @@ return [
 		],
 	],
 
+	'delete' 			=> [
+		'confirm_message' 	=> ' zvolenú kartu',
+		'success_message' 	=> 'Karta bola úspešne odstránená zo systému',
+		'errors' 			=> [
+			'not_existing_card' => 'Taká karta neexistuje v systéme',
+			'client_mismatch' 	=> 'Nemáte právo vymazať kartu iného klienta',
+		],
+	],
+
 	'form' 				=> [
 		'headers' 			=> [
 			'card_info' 		=> 'Informácie o karte',

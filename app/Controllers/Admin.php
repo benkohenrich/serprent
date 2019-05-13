@@ -47,6 +47,7 @@ class Admin extends Controller
 					'role_id' 				=> $this->user->get_role()->id,
 					'language_code' 		=> $this->user->get_language_code(),
 					'client' 				=> $this->user->client,
+					'is_superadmin' 		=> $this->user->is_superadmin(),
 				],
 				'system_roles' 			=> System::config('app.system_roles')
 			]);
@@ -122,6 +123,15 @@ class Admin extends Controller
 			'auth.login.success' 				=> [ $this->logger, 'info' ],
 			'auth.login.fail' 					=> [ $this->logger, 'warn' ],
 			'auth.logout' 						=> [ $this->logger, 'info' ],
+			'client.create' 					=> [ $this->logger, 'info' ],
+			'client.edit' 						=> [ $this->logger, 'info' ],
+			'client.remove' 					=> [ $this->logger, 'info' ],
+			'user.crete' 						=> [ $this->logger, 'info' ],
+			'user.edit' 						=> [ $this->logger, 'info' ],
+			'user.remove' 						=> [ $this->logger, 'info' ],
+			'card.crete' 						=> [ $this->logger, 'info' ],
+			'card.edit' 						=> [ $this->logger, 'info' ],
+			'card.remove' 						=> [ $this->logger, 'info' ],
 		]);
 	}
 }

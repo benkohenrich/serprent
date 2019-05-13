@@ -129,6 +129,9 @@ class Clients extends Admin
 	 */
 	public function edit($client_id)
 	{
+		if ($client_id !== $this->user->client_id AND !$this->user->is_superadmin())
+			Router::redirect([ 'clients' ]);
+
 		if (Input::is_ajax_request())
 		{
 			$this->view->set_file(FALSE);
@@ -179,6 +182,7 @@ class Clients extends Admin
 	{
 		$errors 					= new \Appendix\Libraries\Errors();
 		$parsed_attributes 			= Utils::parse_input($client, $attributes);
+		$activity_code 				= ($client->is_new_record()) ? 'client.create' : 'client.edit';
 
 		$client->name 				= $parsed_attributes['name'];
 		$client->type 				= $parsed_attributes['type'];
@@ -202,6 +206,8 @@ class Clients extends Admin
 			echo Responder::initialize()->respond(422, Utils::reformat_errors($errors));
 			die;
 		}
+
+		$this->event->notify($activity_code, ModelHelper::prepare($client));
 
 		Input::set_session('client_save_success', I18n::load('clients.form.flash.success'));
 

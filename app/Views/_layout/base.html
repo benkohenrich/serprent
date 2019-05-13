@@ -34,6 +34,13 @@
   </head>
 
   <body>
+
+    <div id="loader-jumping-dots" class="hidden">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+
     <div id="wrapper">
 
       {%- import '_macros/forms.html' as forms_macro -%}
@@ -114,8 +121,11 @@
 
     <script>
       $(document).ready(function () {
+        var bodySelector = $('body');
 
         // TOASTR FLASH
+        setToastrBasicOptions();
+
         {% if flash is not empty %}
           {% if not flash[1] %}
             toastr.info("{{ flash }}");
@@ -215,10 +225,108 @@
           });
         {% endif %}
 
+        // SELECT2 INITIALIZATION
         $('.js-select').select2({
           language: "{{ self.language_code }}",
           placeholder: "{{ i18n('app.plugins.select2.placeholder') }}"
         });
+
+        // TOASTR CONFIRM WINDOW
+        let loadingDots     = $('#loader-jumping-dots');
+        let loadingScreen   = $('#wrapper');
+        let successEvent;
+
+        bodySelector.on('click', '#confirmation-yes', function(){
+          toastr.remove();
+          setToastrBasicOptions();
+          loadingDots.removeClass('hidden');
+
+          let uri           = $(this).data('uri');
+
+          $.ajax({
+            method  : 'POST',
+            url     : uri,
+            data    : {},
+            success : function (data) {
+              $(document).trigger(successEvent);
+            },
+            error   : function (data) {
+              data = JSON.parse(data.responseText);
+              toastr.error(data.message);
+              $('#confirmation-no').trigger('click');
+            }
+          });
+        });
+
+        bodySelector.on('click', '#confirmation-no', function(){
+          toastr.remove();
+          setToastrBasicOptions();
+          loadingDots.addClass('hidden');
+          loadingScreen.removeClass('loading');
+        });
+
+        // TOASTR DELETE CONFIRMATION
+        bodySelector.on('click', '.confirm-button', function (e) {
+          e.preventDefault();
+          toastr.remove();
+          setToastrConfirmOptions();
+          loadingScreen.addClass('loading');
+          successEvent = $(this).data('success-event');
+
+          toastr.info('' +
+            '<button type="button" id="confirmation-yes" class="btn btn-primary btn-sm toastr-confirm-btn" data-uri="' + $(this).attr('href') + '">' +
+              '<i class="fa fa-check toastr-confirm-icon"></i> {{ i18n('app.plugins.toastr.confirm.yes') }}' +
+            '</button>' +
+            '<button type="button" id="confirmation-no" class="btn btn-danger btn-sm toastr-confirm-btn">' +
+              '<i class="fa fa-times toastr-confirm-icon"></i> {{ i18n("app.plugins.toastr.confirm.no") }}' +
+            '</button>',
+            '<span>' + $(this).data('confirm-message') + '</span><hr style="margin: 13px">');
+        });
+
+        //FUNCTIONS
+        function setToastrConfirmOptions() {
+          toastr.options = {
+            closeButton : false,
+            allowHtml : true,
+            timeOut : 0,
+            extendedTimeOut : 0,
+            closeOnHover : false,
+            tapToDismiss : false,
+            positionClass : "toast-top-center",
+            iconClasses : {
+              info: 'toast-custom toast-custom-info',
+            }
+          };
+        }
+
+        function setToastrBasicOptions() {
+          toastr.options = {
+            closeButton: false,
+            showDuration: 300,
+            hideDuration: 1000,
+            closeMethod: false,
+            closeDuration: false,
+            closeEasing: false,
+            closeOnHover: true,
+            debug: false,
+            progressBar: false,
+            preventDuplicates: false,
+            positionClass: 'toast-top-right',
+            onclick: null,
+            tapToDismiss : true,
+            showEasing: "swing",
+            hideEasing: "linear",
+            showMethod: "fadeIn",
+            hideMethod: "fadeOut",
+            timeout: 5000,
+            iconClasses: {
+              error: 'toast-custom toast-custom-error',
+              info: 'toast-custom toast-custom-info',
+              success: 'toast-custom toast-custom-success',
+              warning: 'toast-custom toast-custom-warning'
+            },
+          };
+        }
       });
     </script>
 

@@ -54,10 +54,10 @@
         {{ global.disabled ? 'disabled' }}
         {{ global.ready_only ? 'readonly' }}
     >
+      {% if not required %}
+        <option value="0">{{ i18n('app.plugins.select2.placeholder') ~ '...' }}</option>
+      {% endif %}
       {% for option in options %}
-        {% if not required %}
-          <option></option>
-        {% endif %}
         <option value="{{ option.id }}" {{ default is not empty ? (option.id == default ? 'selected') }}>
           {{ option.name }}
         </option>
