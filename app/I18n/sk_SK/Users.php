@@ -41,6 +41,7 @@ return [
 		'headers' 			=> [
 			'user_info' 		=> 'Informácie o používatela',
 			'role_info' 		=> 'Rola nastavenia',
+			'card_info' 		=> 'Karty používateľa',
 		],
 
 		'inputs' 			=> [
@@ -81,5 +82,14 @@ return [
 			'1' 				=> 'Aktívny',
 			'0' 				=> 'Neaktívny',
 		]
-	]
+	],
+
+	'delete' 			=> [
+		'confirm_message' 	=> ' zvoleného používateľa',
+		'success_message' 	=> 'Používateľ bol úspešne odstránený zo systému',
+		'errors' 			=> [
+			'not_existing_card' => 'Takýto používateľ neexistuje v systéme',
+			'client_mismatch' 	=> 'Nemáte právo vymazať používateľa iného klienta',
+		],
+	],
 ];

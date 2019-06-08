@@ -17,8 +17,10 @@ use Helpers\Utils;
 use Libraries\Tables\ControlsBuilder;
 use Libraries\Tables\RowBuilder;
 use Libraries\Tables\TableBuilder;
+use Models\Card;
 use Models\Role;
 use Models\User;
+use Models\UserCard;
 
 class Users extends Admin
 {
@@ -33,6 +35,10 @@ class Users extends Admin
 
 		if (!$this->check_permission('users.management') AND !Input::is_ajax_request())
 			throw new PageNotFound;
+
+		$this->view->register([
+			'section' 		=> 'users'
+		]);
 	}
 
 	public function overview()
@@ -61,7 +67,9 @@ class Users extends Admin
 				$row->add(I18n::load('users.booleans.is_active.' . $user['is_active']));
 
 				$controls->add('edit', Router::uri([ 'users', 'edit', $user['id'] ]));
-				$controls->add('remove', Router::uri([ 'users', 'remove', $user['id'] ]));
+				$controls->add('remove', Router::uri([ 'users', 'remove', $user['id'] ]), [
+					'confirm_message' => I18n::load('users.delete.confirm_message')
+				]);
 
 				$row->add($controls->data());
 
@@ -87,6 +95,9 @@ class Users extends Admin
 		}
 	}
 
+	/**
+	 * @throws \Exceptions\SystemException
+	 */
 	public function create()
 	{
 		if (Input::is_ajax_request())
@@ -125,6 +136,7 @@ class Users extends Admin
 	/**
 	 * @param $user_id
 	 * @throws PageNotFound
+	 * @throws \Exceptions\SystemException
 	 */
 	public function edit($user_id)
 	{
@@ -145,7 +157,7 @@ class Users extends Admin
 			}
 		}
 
-		$this->fill_register();
+		$this->fill_register($user_id);
 
 		$user 				= User::get($user_id);
 
@@ -175,6 +187,11 @@ class Users extends Admin
 		]);
 	}
 
+	/**
+	 * @param User $user
+	 * @param $attributes
+	 * @throws \Exceptions\SystemException
+	 */
 	private function save(User $user, $attributes)
 	{
 		$errors 					= new \Appendix\Libraries\Errors();
@@ -220,6 +237,7 @@ class Users extends Admin
 			$errors->merge_others($user->errors->raw());
 		else
 		{
+			// PERMISSIONS
 			if (!empty($attributes['permissions'][$user->role_id]))
 			{
 				$user_role_info = UserInfo::get_first([
@@ -259,6 +277,38 @@ class Users extends Admin
 					}
 				}
 			}
+
+			// CARDS
+			if ($this->check_permission('cards.management'))
+			{
+				if (!empty($attributes['card_id']))
+				{
+					UserCard::delete_all([
+						"conditions" 	=> [
+							'user_id' 		=> $user->id,
+							'client_id' 	=> $user->client_id
+						]
+					]);
+
+					foreach ($attributes['card_id'] as $card_id)
+					{
+						if (!empty($card_id))
+						{
+							if (!($existing_user_card = UserCard::get_first([ 'card_id' => $card_id ])))
+							{
+								$user_card = new UserCard([
+									'user_id' 		=> $user->id,
+									'card_id' 		=> $card_id,
+									'client_id' 	=> $user->client_id
+								]);
+
+								if (!$user_card->save())
+									$errors->merge_others($user_card->errors->raw());
+							}
+						}
+					}
+				}
+			}
 		}
 
 		if (!$errors->is_empty())
@@ -281,7 +331,7 @@ class Users extends Admin
 		die;
 	}
 
-	private function fill_register()
+	private function fill_register($user_id = NULL)
 	{
 		$roles 		= Role::get_roles($this->user->role_id);
 
@@ -301,10 +351,21 @@ class Users extends Admin
 			$language->name 		= I18n::load('app.languages.' . $language->name);
 		}
 
+		$card_filters 	= [
+			'client_id' 		=> $this->user->client_id,
+			'not_assigned' 		=> TRUE
+		];
+
+		if ($user_id)
+			$card_filters['user_id'] 	= $user_id;
+
+		list($card_meta, $cards) 	= Card::find_all($card_filters);
+
 		$this->view->register([
 			'roles' 			=> $roles,
 			'permissions' 		=> Role::get_permissions(),
-			'languages' 		=> $languages
+			'languages' 		=> $languages,
+			'cards' 			=> ModelHelper::prepare($cards)
 		]);
 	}
 }

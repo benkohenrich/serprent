@@ -8,7 +8,7 @@
     <input type="hidden" name="client_id" value="{{ self.client.id }}">
 
     <div class="row">
-      <div class="col-lg-6">
+      <div class="col-md-4">
         <div class="ibox float-e-margins">
           <div class="ibox-title">
             <h5>{{ i18n('users.form.headers.user_info') }}</h5>
@@ -59,7 +59,7 @@
         </div>
       </div>
 
-      <div class="col-lg-6">
+      <div class="col-md-4">
         <div class="ibox float-e-margins">
           <div class="ibox-title">
             <h5>{{ i18n('users.form.headers.role_info') }}</h5>
@@ -67,11 +67,11 @@
           <div class="ibox-content">
 
             <div class="row">
-              <div class="col-sm-4">
+              <div class="col-sm-12">
                 {{ forms_macro.select('role_id', 'users.form.inputs.role_id', roles, '', true, _context) }}
               </div>
 
-              <div class="col-sm-8">
+              <div class="col-sm-12">
                 <label>{{ i18n('users.form.inputs.permissions') ~ '*' }}</label>
 
                 {% for permission in permissions %}
@@ -88,6 +88,25 @@
           </div>
         </div>
       </div>
+
+      {% if self.permissions['cards.management'] %}
+        <div class="col-md-4">
+          <div class="ibox float-e-margins">
+            <div class="ibox-title">
+              <h5>{{ i18n('users.form.headers.card_info') }}</h5>
+            </div>
+            <div class="ibox-content">
+              <div class="row card-container">
+                <div class="col-sm-12">
+                  {% set icon_left = { 'icon' : 'fa-times', 'style' : 'background: #e16565; cursor: pointer;' } %}
+                  {{ forms_macro.select('card_id[]', '', cards, '', false, _context) }}
+                  {% set icon_left = '' %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endif %}
     </div>
 
   </form>
@@ -99,11 +118,92 @@
     $(document).ready(function () {
 
       $('#role_id').on('change', function () {
-        var selectedRole  = $('#role_id option:selected').val();
+        let selectedRole  = $('#role_id option:selected').val();
 
         $('.role-permissions').hide();
         $('.role-permissions[data-role-id=' + selectedRole + ']').show();
       }).trigger('change');
+
+      $('body').on('change', '[name=card_id\\[\\]]', function () {
+        let appendNew       = true;
+        let cardSelectors   = $('[name=card_id\\[\\]]');
+        let optionLength    = cardSelectors.first().find('option[value!=0]').length;
+
+        cardSelectors.each(function () {
+          if ($(this).val() === '0') {
+            appendNew = false;
+          }
+        });
+
+        cardSelectors.find('option').prop('disabled', false);
+
+        if (appendNew && optionLength !== cardSelectors.length) {
+          {% set icon_left = { 'icon' : 'fa-times', 'style' : 'background: #e16565; cursor: pointer;' } %}
+          $('.card-container').append('<div class="col-sm-12">{{ forms_macro.select("card_id[]", "", cards, "", false, _context)|e('js') }}</div>');
+          {% set icon_left = '' %}
+        }
+
+        // TODO list only those cards, which are not yet assigned to a user
+
+        cardSelectors.each(function () {
+          let value     = $(this).val();
+
+          if (value !== '0') {
+            $('[name=card_id\\[\\]]').each(function () {
+              if ($(this).find('option:selected').val() != value) {
+                $(this).find('option[value=' + value + ']').prop('disabled', true);
+              }
+            });
+          }
+        });
+
+        $(document).trigger('reloadSelect2');
+      });
+
+      $('body').on('click', '.input-group-addon', function () {
+        let cardSelector      = $(this).siblings('[name=card_id\\[\\]]');
+        let allCardSelectors  = $('[name=card_id\\[\\]]');
+        let optionLength      = cardSelector.find('option[value!=0]').length;
+
+        if (cardSelector.length > 0 && allCardSelectors.length > 1) {
+          allCardSelectors.find('option[value=' + cardSelector.val() + ']').prop('disabled', false);
+
+          $(this).parents('.col-sm-12').remove();
+
+          let updatedCardSelectors = $('[name=card_id\\[\\]]');
+
+          if (optionLength !== updatedCardSelectors.length) {
+            var appendNew = true;
+
+            updatedCardSelectors.each(function () {
+              if ($(this).val() === '0') {
+                appendNew = false;
+              }
+            });
+
+            if (appendNew) {
+              {% set icon_left = { 'icon' : 'fa-times', 'style' : 'background: #e16565; cursor: pointer;' } %}
+              $('.card-container').append('<div class="col-sm-12">{{ forms_macro.select("card_id[]", "", cards, "", false, _context)|e('js') }}</div>');
+              {% set icon_left = '' %}
+
+              $('[name=card_id\\[\\]]').each(function () {
+                let value     = $(this).val();
+
+                if (value !== '0') {
+                  $('[name=card_id\\[\\]]').each(function () {
+                    if ($(this).find('option:selected').val() != value) {
+                      $(this).find('option[value=' + value + ']').prop('disabled', true);
+                    }
+                  });
+                }
+              });
+
+            }
+          }
+        }
+
+        $(document).trigger('reloadSelect2');
+      });
 
     });
   </script>

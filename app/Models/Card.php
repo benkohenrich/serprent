@@ -64,6 +64,29 @@ class Card extends Model
 		$conditions 					= [];
 		$conditions[0] 					= "cards.is_deleted IS FALSE";
 
+		if (isset($filter['client_id']))
+		{
+			$conditions[0] 		= sprintf("%s AND cards.client_id = ?", $conditions[0]);
+			$conditions[] 		= $filter['client_id'];
+		}
+
+		if (isset($filter['not_assigned']) AND !isset($filter['user_id']))
+		{
+			$conditions[0] 		= sprintf("%s AND cards.id NOT IN (SELECT card_id FROM user_cards)", $conditions[0]);
+		}
+
+		if (!isset($filter['not_assigned']) AND isset($filter['user_id']))
+		{
+			$conditions[0] 		= sprintf("%s AND user_cards.user_id = ?", $conditions[0]);
+			$conditions[] 		= $filter['user_id'];
+		}
+
+		if (isset($filter['not_assigned']) AND isset($filter['user_id']))
+		{
+			$conditions[0] 		= sprintf("%s AND ((cards.id NOT IN (SELECT card_id FROM user_cards)) OR (user_cards.user_id = ?))", $conditions[0]);
+			$conditions[] 		= $filter['user_id'];
+		}
+
 		$params 						= [];
 		$joins 							= [
 			'LEFT JOIN user_cards ON cards.id = user_cards.card_id',
@@ -145,6 +168,7 @@ class Card extends Model
 		$card = [
 			'id' 				=> $this->id,
 			'code' 				=> $this->code,
+			'name' 				=> $this->code,
 			'is_active' 		=> $this->is_active,
 			'is_deleted' 		=> $this->is_deleted,
 			'card_user' 		=> ModelHelper::prepare($this->user_card),

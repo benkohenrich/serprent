@@ -46,10 +46,19 @@
       </label>
     {% endif %}
 
-    <select class="form-control js-select"
-        id="{{ name }}"
-        name="{{ name }}"
-        title="{{ i18n(label) }}"
+    {% if global.icon_left %}
+      <div class="input-group">
+        <span class="input-group-addon" style="color: white;{{ global.icon_left.style }}">
+          <span class="add-on">
+            <i class="fa {{ global.icon_left.icon }}"></i>
+          </span>
+        </span>
+    {% endif %}
+
+    <select class="form-control js-select" {% if global.icon_left %}style="display: none" {% endif %}
+            id="{{ name }}"
+            name="{{ name }}"
+            title="{{ i18n(label) }}"
         {{ required ? 'required' }}
         {{ global.disabled ? 'disabled' }}
         {{ global.ready_only ? 'readonly' }}
@@ -57,12 +66,19 @@
       {% if not required %}
         <option value="0">{{ i18n('app.plugins.select2.placeholder') ~ '...' }}</option>
       {% endif %}
+
       {% for option in options %}
         <option value="{{ option.id }}" {{ default is not empty ? (option.id == default ? 'selected') }}>
-          {{ option.name }}
+          {{ (global.full_name) ? option.full_name : option.name }}
         </option>
       {% endfor %}
     </select>
+
+    {% if global.icon_left %}
+      </div>
+    {% endif %}
+
+
   </div>
 {% endmacro %}
 

@@ -32,6 +32,7 @@ use Helpers\ModelHelper;
  *
  * Relations:
  * @property Client client
+ * @property UserCard user_card
  */
 class User extends Model
 {
@@ -50,6 +51,14 @@ class User extends Model
 			'client',
 			'foreign_key' 	=> 'client_id',
 			'class_name' 	=> Client::class
+		],
+	];
+
+	static $has_many = [
+		[
+			'user_card',
+			'foreign_key' 	=> 'user_id',
+			'class_name' 	=> UserCard::class
 		],
 	];
 
@@ -247,6 +256,7 @@ class User extends Model
 			'name' 				=> $this->name,
 			'surname' 			=> $this->surname,
 			'is_superadmin' 	=> $this->is_superadmin(),
+			'user_cards' 		=> Model::prepare($this->user_card)
 		];
 
 		return $user;

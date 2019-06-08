@@ -32,6 +32,10 @@ class Cards extends Admin
 
 		if (!$this->check_permission('cards.management') AND !Input::is_ajax_request())
 			throw new PageNotFound;
+
+		$this->view->register([
+			'section' 		=> 'cards'
+		]);
 	}
 
 	public function overview()
