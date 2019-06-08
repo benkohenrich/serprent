@@ -57,6 +57,13 @@
         url: "{{ file([ 'scripts', 'plugins', 'data-tables', 'i18n', self.language_code ~ '.json']) }}"
       }
     });
+
+    $(document).on("confirmDeleteEvent", function () {
+      clientsTable.DataTable().ajax.reload();
+      $('#loader-jumping-dots').addClass('hidden');
+      $('#wrapper').removeClass('loading');
+      toastr.success("{{ i18n('clients.delete.success_message') }}");
+    });
   </script>
 
 {% endblock %}

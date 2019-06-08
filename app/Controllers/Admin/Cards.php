@@ -267,13 +267,13 @@ class Cards extends Admin
 		/** @var Card $card */
 		if (!($card = Card::get_first([ 'id' => $card_id, 'is_deleted' => FALSE ])))
 		{
-			$errors->add('card', I18n::load('cards.errors.not_existing_card'));
+			$errors->add('card', I18n::load('cards.delete.errors.not_existing_card'));
 		}
 		else
 		{
 			if ($card->client_id !== $this->user->client_id)
 			{
-				$errors->add('card', I18n::load('cards.errors.client_mismatch'));
+				$errors->add('card', I18n::load('cards.delete.errors.client_mismatch'));
 			}
 
 			$card->is_deleted 		= 1;
@@ -297,7 +297,8 @@ class Cards extends Admin
 		{
 			$this->db->transaction('stop');
 
-			return Responder::initialize()->respond(422, Utils::reformat_errors($errors));
+			echo Responder::initialize()->respond(422, Utils::reformat_errors($errors));
+			die;
 		}
 
 		$this->db->transaction('finish');

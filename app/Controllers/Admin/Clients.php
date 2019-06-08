@@ -4,6 +4,7 @@ namespace Controllers\Admin;
 
 use Appendix\Core\I18n;
 use Appendix\Core\Router;
+use Appendix\Libraries\Errors;
 use Appendix\Libraries\Input;
 use Controllers\Admin;
 use Appendix\Exceptions\PageNotFound;
@@ -15,7 +16,10 @@ use Libraries\Enums\Enums;
 use Libraries\Tables\ControlsBuilder;
 use Libraries\Tables\RowBuilder;
 use Libraries\Tables\TableBuilder;
+use Models\Card;
 use Models\Client;
+use Models\User;
+use Models\UserCard;
 
 class Clients extends Admin
 {
@@ -63,7 +67,9 @@ class Clients extends Admin
 				$row->add(I18n::load('clients.booleans.is_active.' . $client['is_active']));
 
 				$controls->add('edit', Router::uri([ 'clients', 'edit', $client['id'] ]));
-				$controls->add('remove', Router::uri([ 'clients', 'remove', $client['id'] ]));
+				$controls->add('remove', Router::uri([ 'clients', 'remove', $client['id'] ]), [
+					'confirm_message' => I18n::load('clients.delete.confirm_message')
+				]);
 
 				$row->add($controls->data());
 
@@ -217,5 +223,85 @@ class Clients extends Admin
 		die;
 	}
 
-	//TODO do delete after every other section is complete, because all users and cards of that company must be deleted with client
+	public function remove($client_id)
+	{
+		$this->view->set_file(FALSE);
+
+		$errors 		= new Errors();
+
+		$this->db->transaction('start');
+
+		/** @var Client $client */
+		if (!($client = Client::get_first([ 'id' => $client_id, 'is_deleted' => FALSE ])))
+		{
+			$errors->add('client', I18n::load('clients.delete.errors.not_existing_client'));
+		}
+		else
+		{
+			$client->is_deleted 		= 1;
+
+			if(!$client->save())
+			{
+				$errors->merge_others($client->errors->raw());
+			}
+			else
+			{
+				$client_users 		= User::get_all([ 'client_id' => $client_id ]);
+
+				if (!empty($client_users))
+				{
+					/** @var User $client_user */
+					foreach ($client_users as $client_user)
+					{
+						$random_string 				= md5((new \DateTime())->format("Y-m-d H:i:s") . rand());
+
+						$client_user->email 		= sprintf("%s-%s", $client_user->email, $random_string);
+						$client_user->username 		= sprintf("%s-%s", $client_user->username, $random_string);
+						$client_user->is_deleted 	= 1;
+
+						if (!$client_user->save())
+							$errors->merge_others($client_user->errors->raw());
+					}
+				}
+
+				$client_cards 		= Card::get_all([ 'client_id' => $client_id ]);
+
+				if (!empty($client_cards))
+				{
+					/** @var Card $client_card */
+					foreach ($client_cards as $client_card)
+					{
+						$client_card->code 			= sprintf("%s-%s", $client_card->code, md5((new \DateTime())->format("Y-m-d H:i:s") . rand()));
+						$client_card->is_deleted 	= 1;
+
+						if (!$client_card->save())
+							$errors->merge_others($client_card->errors->raw());
+					}
+				}
+
+				if ($errors->is_empty())
+				{
+					UserCard::delete_all([
+						'conditions' 	=> [
+							'client_id' 	=> $client_id
+						]
+					]);
+				}
+			}
+		}
+
+		if (!$errors->is_empty())
+		{
+			$this->db->transaction('stop');
+
+			echo Responder::initialize()->respond(422, Utils::reformat_errors($errors));
+			die;
+		}
+
+		$this->db->transaction('finish');
+
+		$this->event->notify('client.remove', ModelHelper::prepare($client));
+
+		return Responder::initialize()->respond(204);
+	}
 }

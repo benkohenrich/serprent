@@ -264,8 +264,11 @@
             },
             error   : function (data) {
               data = JSON.parse(data.responseText);
-              toastr.error(data.message);
-              $('#confirmation-no').trigger('click');
+              toastr.error(data[0].message);
+              toastr.remove();
+              setToastrBasicOptions();
+              loadingDots.addClass('hidden');
+              loadingScreen.removeClass('loading');
             }
           });
         });

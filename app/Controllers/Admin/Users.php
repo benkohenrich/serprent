@@ -381,13 +381,13 @@ class Users extends Admin
 		/** @var User $user */
 		if (!($user = User::get_first([ 'id' => $user_id, 'is_deleted' => FALSE ])))
 		{
-			$errors->add('user', I18n::load('users.errors.not_existing_user'));
+			$errors->add('user', I18n::load('users.delete.errors.not_existing_user'));
 		}
 		else
 		{
 			if ($user->client_id !== $this->user->client_id)
 			{
-				$errors->add('user', I18n::load('users.errors.client_mismatch'));
+				$errors->add('user', I18n::load('users.delete.errors.client_mismatch'));
 			}
 
 			$random_string 			= md5((new \DateTime())->format("Y-m-d H:i:s") . rand());
@@ -414,7 +414,8 @@ class Users extends Admin
 		{
 			$this->db->transaction('stop');
 
-			return Responder::initialize()->respond(422, Utils::reformat_errors($errors));
+			echo Responder::initialize()->respond(422, Utils::reformat_errors($errors));
+			die;
 		}
 
 		$this->db->transaction('finish');

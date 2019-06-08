@@ -76,5 +76,13 @@ return [
 			'1' 				=> 'Aktívny',
 			'0' 				=> 'Neaktívny',
 		]
-	]
+	],
+
+	'delete' 			=> [
+		'confirm_message' 	=> ' zvoleného klienta',
+		'success_message' 	=> 'Klient bol úspešne odstránený zo systému',
+		'errors' 			=> [
+			'not_existing_client' 	=> 'Takýto klient neexistuje v systéme',
+		],
+	],
 ];
