@@ -88,7 +88,7 @@ return [
 		'confirm_message' 	=> ' zvoleného používateľa',
 		'success_message' 	=> 'Používateľ bol úspešne odstránený zo systému',
 		'errors' 			=> [
-			'not_existing_card' => 'Takýto používateľ neexistuje v systéme',
+			'not_existing_user' => 'Takýto používateľ neexistuje v systéme',
 			'client_mismatch' 	=> 'Nemáte právo vymazať používateľa iného klienta',
 		],
 	],

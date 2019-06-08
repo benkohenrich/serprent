@@ -4,6 +4,7 @@ namespace Controllers\Admin;
 
 use Appendix\Core\I18n;
 use Appendix\Core\Router;
+use Appendix\Libraries\Errors;
 use Appendix\Libraries\Input;
 use Appendix\Models\Language;
 use Appendix\Models\Permission;
@@ -367,5 +368,59 @@ class Users extends Admin
 			'languages' 		=> $languages,
 			'cards' 			=> ModelHelper::prepare($cards)
 		]);
+	}
+
+	public function remove($user_id)
+	{
+		$this->view->set_file(FALSE);
+
+		$errors 		= new Errors();
+
+		$this->db->transaction('start');
+
+		/** @var User $user */
+		if (!($user = User::get_first([ 'id' => $user_id, 'is_deleted' => FALSE ])))
+		{
+			$errors->add('user', I18n::load('users.errors.not_existing_user'));
+		}
+		else
+		{
+			if ($user->client_id !== $this->user->client_id)
+			{
+				$errors->add('user', I18n::load('users.errors.client_mismatch'));
+			}
+
+			$random_string 			= md5((new \DateTime())->format("Y-m-d H:i:s") . rand());
+
+			$user->is_deleted 		= 1;
+			$user->email 			= sprintf("%s-%s", $user->email, $random_string);
+			$user->username 		= sprintf("%s-%s", $user->username, $random_string);
+
+			if(!$user->save())
+			{
+				$errors->merge_others($user->errors->raw());
+			}
+			else
+			{
+				UserCard::delete_all([
+					'conditions' 	=> [
+						'user_id' 		=> $user->id
+					]
+				]);
+			}
+		}
+
+		if (!$errors->is_empty())
+		{
+			$this->db->transaction('stop');
+
+			return Responder::initialize()->respond(422, Utils::reformat_errors($errors));
+		}
+
+		$this->db->transaction('finish');
+
+		$this->event->notify('user.remove', ModelHelper::prepare($user));
+
+		return Responder::initialize()->respond(204);
 	}
 }
